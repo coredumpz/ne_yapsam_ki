@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/screens/login_ui.dart';
 import 'package:ne_yapsam_ki/src/pages/home_page.dart';
 import 'package:ne_yapsam_ki/src/pages/landing_page.dart';
-import 'package:ne_yapsam_ki/src/pages/log_in_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,7 +11,7 @@ class RouteGenerator {
       case "/landing":
         return MaterialPageRoute(builder: (_) => const LandingPage());
       case "/login":
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return MaterialPageRoute(builder: (_) => const LoginPage());
       case "/homepage":
         return MaterialPageRoute(builder: (_) => const HomePage());
       default:

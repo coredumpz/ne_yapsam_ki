@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
@@ -15,7 +14,7 @@ class _LandingPageState extends State<LandingPage> {
     return MaterialApp(
       home: Scaffold(
         body: _buildContent(context),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
       ),
     );
   }
@@ -30,15 +29,18 @@ class _LandingPageState extends State<LandingPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const Text(
-            "NE YAPSAM Kİ",
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 35,
-              fontStyle: FontStyle.italic,
-            ),
+          Image.asset(
+            "assets/images/aa.png",
+            scale: 2,
           ),
-          const SizedBox(height: 100.0),
+          // const Text(
+          //   "NE YAPSAM Kİ",
+          //   style: TextStyle(
+          //     color: Colors.red,
+          //     fontSize: 35,
+          //     fontStyle: FontStyle.italic,
+          //   ),
+          // ),
           SignInButtonBuilder(
             text: 'Sign in with Email',
             icon: Icons.email,
