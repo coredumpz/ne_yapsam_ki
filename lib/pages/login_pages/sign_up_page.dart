@@ -5,8 +5,8 @@ import 'package:ne_yapsam_ki/components/text_input_field.dart';
 
 import 'package:ne_yapsam_ki/constants/theme_data.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class SingUpPage extends StatelessWidget {
+  const SingUpPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 80,
+                    height: 40,
                   ),
                   const Text(
                     'Sign Up',
@@ -39,7 +39,7 @@ class SignUpScreen extends StatelessWidget {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 50, right: 5, top: 35),
+                      padding: EdgeInsets.only(left: 50, right: 5, top: 20),
                       child: Text(
                         'Full Name',
                         textAlign: TextAlign.left,
@@ -71,7 +71,7 @@ class SignUpScreen extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.only(left: 50, right: 5, top: 15),
                       child: Text(
-                        'Phone No',
+                        'Age',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 13,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
+import 'package:ne_yapsam_ki/components/custom_button.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -21,9 +22,9 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _buildContent(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(60.0),
+      padding: const EdgeInsets.all(50.0),
       margin: const EdgeInsets.symmetric(
-        vertical: 80.0,
+        vertical: 50.0,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,25 +32,26 @@ class _LandingPageState extends State<LandingPage> {
         children: <Widget>[
           Image.asset(
             "assets/images/aa.png",
-            scale: 2,
+            width: 250,
+            height: 250,
+            scale: 1,
           ),
-          // const Text(
-          //   "NE YAPSAM Kİ",
-          //   style: TextStyle(
-          //     color: Colors.red,
-          //     fontSize: 35,
-          //     fontStyle: FontStyle.italic,
-          //   ),
-          // ),
-          SignInButtonBuilder(
-            text: 'Sign in with Email',
-            icon: Icons.email,
+          Image.asset(
+            "assets/images/text.png",
+            scale: 1,
+          ),
+          CustomElevatedButton(
+            text: 'Sign In',
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                Colors.black,
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pushNamed(
                 "/login",
               );
             },
-            backgroundColor: Colors.blueGrey[700]!,
           ),
           TextButton(
             onPressed: () {
@@ -57,7 +59,10 @@ class _LandingPageState extends State<LandingPage> {
                 "/homepage",
               );
             },
-            child: const Text("Continue without login"),
+            child: const Text(
+              "Continue without login",
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       ),

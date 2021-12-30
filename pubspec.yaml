@@ -34,6 +34,8 @@ dependencies:
   progress_loading_button: ^1.1.2
   font_awesome_flutter: ^9.2.0
   flutter_fortune_wheel: ^1.1.1
+  flutter_svg: ^1.0.0
+
   flutter:
     sdk: flutter
 

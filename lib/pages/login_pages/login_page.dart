@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:ne_yapsam_ki/components/round_btn.dart';
 import 'package:ne_yapsam_ki/components/text_input_field.dart';
 import 'package:ne_yapsam_ki/constants/theme_data.dart';
-import 'package:ne_yapsam_ki/screens/sign_up_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,7 +17,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent), // Top bar color
+          statusBarColor: Colors.transparent,
+        ), // Top bar color
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
@@ -99,8 +99,26 @@ class _LoginPageState extends State<LoginPage> {
                     height: 30,
                   ),
                   const Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(top: 15),
                     child: CustomButton(1, 'Login'),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        "/homepage",
+                      );
+                    },
+                    child: const Text(
+                      "Continue without login",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 15,
@@ -158,11 +176,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignUpScreen(),
-                              ),
+                            Navigator.of(context).pushNamed(
+                              "/signup",
                             );
                           },
                           child: const Text(
@@ -176,6 +191,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                 ],
               ),
