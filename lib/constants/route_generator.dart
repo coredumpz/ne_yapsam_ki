@@ -4,6 +4,7 @@ import 'package:ne_yapsam_ki/pages/home_page.dart';
 import 'package:ne_yapsam_ki/pages/landing_page.dart';
 import 'package:ne_yapsam_ki/pages/login_pages/sign_up_page.dart';
 import 'package:ne_yapsam_ki/pages/wheel_pages/luck_wheel.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,6 +19,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomePage());
       case "/wheel":
         return MaterialPageRoute(builder: (_) => LuckWheel());
+      case "/result":
+        return MaterialPageRoute(builder: (_) => const WheelResultPage());
       default:
         return _errorRoute();
     }

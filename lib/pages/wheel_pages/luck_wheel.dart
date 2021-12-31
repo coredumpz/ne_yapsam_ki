@@ -1,6 +1,10 @@
+import 'dart:ffi';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/utils/provider.dart';
+import 'package:provider/provider.dart';
 
 import 'board_view.dart';
 import '../../models/wheel_model.dart';
@@ -26,6 +30,8 @@ class _LuckWheelState extends State<LuckWheel>
     Luck("games", Colors.accents[8]),
     Luck("food", Colors.accents[10]),
   ];
+
+  bool isFinished = false;
 
   @override
   void initState() {
@@ -107,12 +113,24 @@ class _LuckWheelState extends State<LuckWheel>
 
   int _calIndex(value) {
     var _base = (2 * pi / _items.length / 2) / (2 * pi);
+    //print((((_base + value) % 1) * _items.length).floor());
     return (((_base + value) % 1) * _items.length).floor();
   }
 
   _buildResult(_value) {
     var _index = _calIndex(_value * _angle + _current);
     String _asset = _items[_index].asset;
+    if (!_ctrl.isAnimating && isFinished) {
+      _ctrl.dispose;
+      print(_index);
+      sleep(const Duration(seconds: 1));
+      Provider.of<WheelProvider>(context).setWheelIndex = _index;
+      Navigator.pop(context);
+      Navigator.of(context).pushNamed(
+        "/result",
+      );
+    }
+    isFinished = true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Align(
