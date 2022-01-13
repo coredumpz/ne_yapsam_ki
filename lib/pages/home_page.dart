@@ -2,7 +2,6 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ne_yapsam_ki/pages/wheel_pages/luck_wheel.dart';
 
 import 'movies_pages/movies.dart';
 
@@ -53,7 +52,14 @@ class HomePage extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          _createHeader(),
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: Image.asset(
+              "assets/images/text.png",
+              scale: 1.5,
+            ),
+          ),
+          const Divider(),
           _createDrawerItem(
             icon: FontAwesomeIcons.home,
             text: 'Home Page',
@@ -81,35 +87,6 @@ class HomePage extends StatelessWidget {
             icon: FontAwesomeIcons.signInAlt,
             text: 'Sign In',
             onTap: () => Navigator.of(context).pushNamed("/login"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _createHeader() {
-    return DrawerHeader(
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-      /*decoration: const BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: AssetImage('assets/images/aa.png'),
-        ),
-      ),*/
-      child: Stack(
-        children: const <Widget>[
-          Positioned(
-            bottom: 12.0,
-            left: 16.0,
-            child: Text(
-              "Ne Yapsam Ki",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
           ),
         ],
       ),

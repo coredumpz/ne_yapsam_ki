@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ne_yapsam_ki/components/custom_button.dart';
+import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/models/checkbox_model.dart';
+import 'package:ne_yapsam_ki/utils/provider.dart';
+import 'package:provider/provider.dart';
 
 class CheckBoxListTileDemo extends StatefulWidget {
   @override
@@ -9,7 +12,7 @@ class CheckBoxListTileDemo extends StatefulWidget {
 
 class CheckBoxListTileDemoState extends State<CheckBoxListTileDemo> {
   List<CheckBoxListTileModel> checkBoxListTileModel =
-      CheckBoxListTileModel.getUsers();
+      CheckBoxListTileModel.getGenres();
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +56,15 @@ class CheckBoxListTileDemoState extends State<CheckBoxListTileDemo> {
                                   letterSpacing: 0.5),
                             ),
                             value: checkBoxListTileModel[index].isCheck,
-                            secondary: Container(
+                            secondary: SizedBox(
                               height: 50,
                               width: 100,
                               child: Image.network(
                                   checkBoxListTileModel[index].img),
                             ),
                             onChanged: (val) {
+                              checkBoxListTileModel[index].isCheck =
+                                  !checkBoxListTileModel[index].isCheck;
                               itemChange(val!, index);
                             },
                           ),
@@ -70,9 +75,35 @@ class CheckBoxListTileDemoState extends State<CheckBoxListTileDemo> {
                 },
               ),
             ),
-            CustomElevatedButton(
-              onPressed: () {},
-              text: "Sort",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomElevatedButton(
+                  onPressed: () {
+                    Provider.of<WheelProvider>(context, listen: false)
+                        .setSortButtonPressed = true;
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(
+                      "/homepage",
+                    );
+                  },
+                  text: "Sort",
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                CustomElevatedButton(
+                  onPressed: () {
+                    Provider.of<WheelProvider>(context, listen: false)
+                        .setSortButtonPressed = false;
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(
+                      "/homepage",
+                    );
+                  },
+                  text: "See all movies",
+                ),
+              ],
             ),
           ],
         ));
@@ -81,6 +112,14 @@ class CheckBoxListTileDemoState extends State<CheckBoxListTileDemo> {
   void itemChange(bool val, int index) {
     setState(() {
       checkBoxListTileModel[index].isCheck = val;
+      selectedGenres.remove("movie");
+
+      if (checkBoxListTileModel[index].isCheck) {
+        selectedGenres.add(checkBoxListTileModel[index].title);
+      } else if (!checkBoxListTileModel[index].isCheck &&
+          selectedGenres.contains(checkBoxListTileModel[index].title)) {
+        selectedGenres.remove(checkBoxListTileModel[index].title);
+      }
     });
   }
 }

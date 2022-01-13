@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -23,11 +21,11 @@ class _LuckWheelState extends State<LuckWheel>
   late AnimationController _ctrl;
   late Animation _ani;
   final List<Luck> _items = [
-    Luck("movies", Colors.accents[0]),
+    Luck("movie", Colors.accents[0]),
     Luck("tvseries", Colors.accents[2]),
-    Luck("books", Colors.accents[4]),
+    Luck("book", Colors.accents[4]),
     Luck("song", Colors.accents[6]),
-    Luck("games", Colors.accents[8]),
+    Luck("game", Colors.accents[8]),
     Luck("food", Colors.accents[10]),
   ];
 
@@ -35,7 +33,6 @@ class _LuckWheelState extends State<LuckWheel>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     var _duration = const Duration(milliseconds: 5000);
     _ctrl = AnimationController(vsync: this, duration: _duration);
@@ -55,26 +52,49 @@ class _LuckWheelState extends State<LuckWheel>
         ),
         backgroundColor: Colors.green,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.green, Colors.blue.withOpacity(0.2)])),
-        child: AnimatedBuilder(
-            animation: _ani,
-            builder: (context, child) {
-              final _value = _ani.value;
-              final _angle = _value * this._angle;
-              return Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  BoardView(items: _items, current: _current, angle: _angle),
-                  _buildGo(),
-                  _buildResult(_value),
-                ],
+      body: Flex(
+        direction: Axis.vertical,
+        children: [
+          Container(
+            height: 550,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.green, Colors.blue.withOpacity(0.2)])),
+            child: AnimatedBuilder(
+              animation: _ani,
+              builder: (context, child) {
+                final _value = _ani.value;
+                final _angle = _value * this._angle;
+                return Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    BoardView(items: _items, current: _current, angle: _angle),
+                    _buildGo(),
+                    _buildResult(_value),
+                  ],
+                );
+              },
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              var _index = _calIndex(_ani.value * _angle + _current);
+              _ctrl.dispose();
+              Provider.of<WheelProvider>(context, listen: false).setWheelIndex =
+                  _index;
+              Navigator.pop(context);
+              Navigator.of(context).pushNamed(
+                "/result",
               );
-            }),
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.lightGreen),
+            ),
+            child: const Text("See The Result"),
+          )
+        ],
       ),
     );
   }
@@ -120,17 +140,6 @@ class _LuckWheelState extends State<LuckWheel>
   _buildResult(_value) {
     var _index = _calIndex(_value * _angle + _current);
     String _asset = _items[_index].asset;
-    if (!_ctrl.isAnimating && isFinished) {
-      _ctrl.dispose;
-      print(_index);
-      sleep(const Duration(seconds: 1));
-      Provider.of<WheelProvider>(context).setWheelIndex = _index;
-      Navigator.pop(context);
-      Navigator.of(context).pushNamed(
-        "/result",
-      );
-    }
-    isFinished = true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Align(

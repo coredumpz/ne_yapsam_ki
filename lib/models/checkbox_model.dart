@@ -10,7 +10,7 @@ class CheckBoxListTileModel {
       required this.title,
       required this.isCheck});
 
-  static List<CheckBoxListTileModel> getUsers() {
+  static List<CheckBoxListTileModel> getGenres() {
     return <CheckBoxListTileModel>[
       CheckBoxListTileModel(
           id: 1,
@@ -39,44 +39,32 @@ class CheckBoxListTileModel {
       CheckBoxListTileModel(
           id: 5,
           img:
-              'https://static.nautil.us/18098_99897197639505c33a5007bc38d456c3.png',
-          title: "Horror",
-          isCheck: false),
-      CheckBoxListTileModel(
-          id: 6,
-          img:
               'https://assets-eu-01.kc-usercontent.com/bcd02f72-b50c-0179-8b4b-5e44f5340bd4/ccdb3a19-7024-4aa5-8412-d8b74a189760/Introduction-to-science-fiction-The-best-sci-fi-books-for-newbies-to-the-genre-Header.jpg',
           title: "Sci-Fi",
           isCheck: false),
       CheckBoxListTileModel(
-          id: 7,
+          id: 6,
           img:
-              'https://www.pzlitfest.co.uk/wp-content/uploads/VINTAGE-MAP-DISCOVERING-AMERICA.jpg',
-          title: "Historical",
+              "https://esenler.bel.tr/wp-content/uploads/2021/08/yaratici-drama.jpg",
+          title: "Drama",
           isCheck: false),
       CheckBoxListTileModel(
           id: 7,
-          img:
-              'https://i.pstimaj.com/img/78/740x0/5d0c9cb4ae298bc4d8925cd3.jpg',
-          title: "Romance",
-          isCheck: false),
-      CheckBoxListTileModel(
-          id: 8,
           img:
               'https://www.rollingstone.com/wp-content/uploads/2016/10/DontBreathe.jpg?w=800',
           title: "Thriller",
           isCheck: false),
       CheckBoxListTileModel(
-          id: 9,
+          id: 8,
           img:
               'https://icdn.ensonhaber.com/resimler/diger/kok/2019/01/23/vumov_7030.jpg',
           title: "Western",
           isCheck: false),
       CheckBoxListTileModel(
-          id: 10,
+          id: 9,
           img:
               'https://thecastleskeep.com/wp-content/uploads/2020/03/Mystery-and-Crime.jpg',
-          title: "Crime and mystery",
+          title: "Crime",
           isCheck: false),
     ];
   }

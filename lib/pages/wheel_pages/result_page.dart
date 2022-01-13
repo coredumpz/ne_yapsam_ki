@@ -16,11 +16,11 @@ class WheelResultPage extends StatefulWidget {
 
 class _WheelResultPageState extends State<WheelResultPage> {
   List<String> imgList = [
-    "movies",
+    "movie",
     "tvseries",
-    "books",
+    "book",
     "song",
-    "games",
+    "game",
     "food",
   ];
 
@@ -34,7 +34,7 @@ class _WheelResultPageState extends State<WheelResultPage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.navigate_before),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).popAndPushNamed("/wheel"),
           iconSize: 30,
           color: Colors.black,
         ),
@@ -127,24 +127,44 @@ class _WheelResultPageState extends State<WheelResultPage> {
     /*switch (getResultIndex()) {
       case 0:
         var randomMovie = movies[_random.nextInt(movies.length)];
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: Text(randomMovie.title),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MovieDetailsPage(
-                  movieName: randomMovie.title,
-                  description: randomMovie.description,
-                  imgURL: randomMovie.imageUrl,
-                  imdbRate: randomMovie.imdb,
-                  year: randomMovie.year,
-                  genre: randomMovie.genre,
-                ),
+        return Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 20),
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+              child: Image.network(
+                randomMovie.imageUrl,
+                fit: BoxFit.fitHeight,
               ),
             ),
-          ),
+            Container(
+              padding: const EdgeInsets.only(top: 20),
+              child: TextButton(
+                  child: Text(
+                    randomMovie.title,
+                    style: const TextStyle(
+                        color: Colors.green,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MovieDetailsPage(
+                          movieName: randomMovie.title,
+                          description: randomMovie.description,
+                          imgURL: randomMovie.imageUrl,
+                          imdbRate: randomMovie.imdb,
+                          year: randomMovie.year,
+                          genre: randomMovie.genre,
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
         );
       case 1:
         return Container(
