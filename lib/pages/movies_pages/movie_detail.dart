@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/models/mongoDBModel.dart';
 
 class MovieDetailsPage extends StatelessWidget {
-  const MovieDetailsPage({
+  MovieDetailsPage({
     Key? key,
-    required this.movieName,
-    required this.description,
-    required this.imgURL,
-    required this.imdbRate,
-    required this.year,
-    required this.genre,
+    required this.movie,
   }) : super(key: key);
 
-  final String movieName;
-  final String description;
-  final String imgURL;
-  final String imdbRate;
-  final String year;
-  final String genre;
+  MongoDbMovieModel movie;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +35,7 @@ class MovieDetailsPage extends StatelessWidget {
                       height: 250,
                       width: MediaQuery.of(context).size.width,
                       child: Image.network(
-                        imgURL,
+                        movie.posterLink,
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -53,7 +44,7 @@ class MovieDetailsPage extends StatelessWidget {
                     bottom: 10,
                     left: 10,
                     child: Text(
-                      "⭐ " + imdbRate + "/10",
+                      "⭐ " + movie.imdbRating.toString() + "/10",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -65,7 +56,7 @@ class MovieDetailsPage extends StatelessWidget {
                     bottom: 10,
                     right: 10,
                     child: Text(
-                      year,
+                      movie.releasedYear.toString(),
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -82,7 +73,7 @@ class MovieDetailsPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: Text(
-                movieName,
+                movie.seriesTitle,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -93,7 +84,7 @@ class MovieDetailsPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(left: 25, bottom: 15),
               child: Text(
-                genre,
+                movie.genre,
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
@@ -103,7 +94,7 @@ class MovieDetailsPage extends StatelessWidget {
             SingleChildScrollView(
               padding: const EdgeInsets.all(10),
               child: Text(
-                description,
+                movie.overview,
                 style: const TextStyle(
                   fontSize: 17,
                   color: Colors.white,

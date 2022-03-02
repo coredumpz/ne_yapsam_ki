@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/models/mongoDBModel.dart';
 
 import '../../models/movie_model.dart';
 import 'movie_detail.dart';
 
 class MovieCard extends StatelessWidget {
-  final Movie movie;
+  final MongoDbMovieModel movie;
 
   MovieCard({required this.movie});
 
@@ -19,12 +20,7 @@ class MovieCard extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MovieDetailsPage(
-                    movieName: movie.title,
-                    description: movie.description,
-                    imgURL: movie.imageUrl,
-                    imdbRate: movie.imdb,
-                    year: movie.year,
-                    genre: movie.genre,
+                    movie: movie,
                   ),
                 ),
               );
@@ -34,17 +30,17 @@ class MovieCard extends StatelessWidget {
               height: 70.0,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(movie.imageUrl), fit: BoxFit.fill)),
+                      image: NetworkImage(movie.posterLink), fit: BoxFit.fill)),
             ),
-            title: Text(movie.title),
+            title: Text(movie.seriesTitle),
             subtitle: Text(movie.genre),
             trailing: Column(
               children: [
-                Text(movie.year),
+                Text(movie.releasedYear.toString()),
                 const SizedBox(
                   height: 15,
                 ),
-                Text("⭐ " + movie.imdb + "/10"),
+                Text("⭐ " + movie.imdbRating.toString() + "/10"),
               ],
             ),
           )

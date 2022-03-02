@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ne_yapsam_ki/models/movie_model.dart';
+import 'package:ne_yapsam_ki/dbHelper/mongodb.dart';
+import 'package:ne_yapsam_ki/models/mongoDBModel.dart';
 import 'package:ne_yapsam_ki/pages/movies_pages/movie_detail.dart';
-import 'package:ne_yapsam_ki/pages/movies_pages/movie_list.dart';
-import 'package:ne_yapsam_ki/utils/provider.dart';
+import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
 import 'package:provider/provider.dart';
 
 class WheelResultPage extends StatefulWidget {
@@ -24,7 +24,6 @@ class _WheelResultPageState extends State<WheelResultPage> {
     "food",
   ];
 
-  final List<Movie> movies = MovieList.getMovies();
   final _random = Random();
 
   @override
@@ -83,8 +82,7 @@ class _WheelResultPageState extends State<WheelResultPage> {
   }
 
   buildResult(BuildContext context) {
-    var randomMovie = movies[_random.nextInt(movies.length)];
-    return Column(
+    /*return Column(
       children: [
         Container(
           padding: const EdgeInsets.only(top: 20),
@@ -106,6 +104,7 @@ class _WheelResultPageState extends State<WheelResultPage> {
                     fontWeight: FontWeight.bold),
               ),
               onPressed: () {
+                /*
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -119,89 +118,68 @@ class _WheelResultPageState extends State<WheelResultPage> {
                     ),
                   ),
                 );
+              */
               }),
         ),
       ],
-    );
-
-    /*switch (getResultIndex()) {
-      case 0:
-        var randomMovie = movies[_random.nextInt(movies.length)];
-        return Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 20),
-              height: 250,
-              width: MediaQuery.of(context).size.width,
-              child: Image.network(
-                randomMovie.imageUrl,
-                fit: BoxFit.fitHeight,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 20),
-              child: TextButton(
-                  child: Text(
-                    randomMovie.title,
-                    style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
+    );*/
+    return SafeArea(
+      child: FutureBuilder(
+        future: MongoDatabase.getData(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (snapshot.hasData) {
+              var totalData = snapshot.data.length; // total length of the data
+              print("Total Data: " + totalData.toString());
+              //var randomMovie = movies[_random.nextInt(movies.length)];
+              var randomMovie = MongoDbMovieModel.fromJson(
+                  snapshot.data[_random.nextInt(snapshot.data.length)]);
+              return Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(top: 20),
+                    height: 250,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(
+                      randomMovie.posterLink,
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MovieDetailsPage(
-                          movieName: randomMovie.title,
-                          description: randomMovie.description,
-                          imgURL: randomMovie.imageUrl,
-                          imdbRate: randomMovie.imdb,
-                          year: randomMovie.year,
-                          genre: randomMovie.genre,
+                  Container(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: TextButton(
+                        child: Text(
+                          randomMovie.seriesTitle,
+                          style: const TextStyle(
+                              color: Colors.green,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    );
-                  }),
-            ),
-          ],
-        );
-      case 1:
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: const Text("tvseries"),
-          ),
-        );
-      case 2:
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: const Text("book"),
-          ),
-        );
-      case 3:
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: const Text("song"),
-          ),
-        );
-      case 4:
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: const Text("games"),
-          ),
-        );
-      case 5:
-        return Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            child: const Text("food"),
-          ),
-        );
-      default:
-    }*/
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MovieDetailsPage(
+                                movie: randomMovie,
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(
+                child: Text("No Data Available."),
+              );
+            }
+          }
+        },
+      ),
+    );
   }
 }
