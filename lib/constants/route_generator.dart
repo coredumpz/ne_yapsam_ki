@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/pages/movies_pages/display.dart';
+import 'package:ne_yapsam_ki/insert.dart';
 import 'package:ne_yapsam_ki/pages/login_pages/login_page.dart';
 import 'package:ne_yapsam_ki/pages/home_page.dart';
 import 'package:ne_yapsam_ki/pages/landing_page.dart';
@@ -21,6 +23,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => LuckWheel());
       case "/result":
         return MaterialPageRoute(builder: (_) => const WheelResultPage());
+      case "/test":
+        return MaterialPageRoute(builder: (_) => MongoDBDisplay());
       default:
         return _errorRoute();
     }

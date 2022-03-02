@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ne_yapsam_ki/components/custom_button.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/models/checkbox_model.dart';
-import 'package:ne_yapsam_ki/utils/provider.dart';
+import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
 import 'package:provider/provider.dart';
 
 class CheckBoxListTileDemo extends StatefulWidget {

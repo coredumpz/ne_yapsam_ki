@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ne_yapsam_ki/utils/provider.dart';
+import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'board_view.dart';
