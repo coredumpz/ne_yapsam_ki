@@ -2,8 +2,11 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ne_yapsam_ki/pages/books/books_home.dart';
+import 'package:ne_yapsam_ki/pages/food/recipe_home.dart';
+import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_TMDB.dart';
 
-import 'movies_pages/movies.dart';
+import 'movies_TMDB/homeTMDB.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -151,16 +154,10 @@ class HomePage extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: <Widget>[
-                  MoviesPage(),
-                  const Center(
-                    child: Icon(Icons.tv_outlined),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.book),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.utensils),
-                  ),
+                  HomeTMDB(),
+                  TvTMDB(),
+                  BooksHome(),
+                  RecipeHome(),
                   const Center(
                     child: Icon(FontAwesomeIcons.gamepad),
                   ),

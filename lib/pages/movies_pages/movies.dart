@@ -79,18 +79,6 @@ class _MoviesPageState extends State<MoviesPage> {
   }
 
   Widget _buildSortedMovieList() {
-    /*for (int i = 0; i < movieLenght; i++) {
-      if (i == 0) {
-        sortedMovies.clear();
-      }
-
-      for (int j = 0; j < selectedGenres.length; j++) {
-        if (movies[i].genre.contains(selectedGenres.elementAt(j))) {
-          sortedMovies.add(movies[i]);
-          j = selectedGenres.length;
-        }
-      }
-    }*/
     return SafeArea(
       child: FutureBuilder(
         future: sortedData(),
@@ -218,7 +206,7 @@ class _MoviesPageState extends State<MoviesPage> {
       case 0:
         return MongoDatabase.getData();
       case 1:
-        return MongoDatabase.getIMDB_7();
+        return MongoDatabase.getIMDB_8();
       case 2:
         return MongoDatabase.getIMDB_8();
       case 3:

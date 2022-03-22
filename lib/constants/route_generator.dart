@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ne_yapsam_ki/pages/movies_pages/display.dart';
-import 'package:ne_yapsam_ki/insert.dart';
 import 'package:ne_yapsam_ki/pages/login_pages/login_page.dart';
 import 'package:ne_yapsam_ki/pages/home_page.dart';
 import 'package:ne_yapsam_ki/pages/landing_page.dart';

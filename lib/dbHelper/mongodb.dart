@@ -18,8 +18,29 @@ class MongoDatabase {
       await userCollection.find().toList();
 
   // DATA QUERY //
-  static Future<List<Map<String, dynamic>>> getIMDB_7() async =>
-      await userCollection.find(where.gt("IMDB_Rating", 6.9)).toList();
+  static Future<List<Map<String, dynamic>>> getBreakfast() async =>
+      await userCollection
+          .find(where.gt("mealType", "[breakfast]").limit(20))
+          .toList();
+
+  static Future<List<Map<String, dynamic>>> getLunch() async =>
+      await userCollection
+          .find(where.gt("mealType", "[lunch]").limit(20))
+          .toList();
+
+  static Future<List<Map<String, dynamic>>> getDinner() async =>
+      await userCollection
+          .find(where.gt("mealType", "[dinner]").limit(20))
+          .toList();
+
+  static Future<List<Map<String, dynamic>>> getSnack() async =>
+      await userCollection
+          .find(where.gt("mealType", "[snack]").limit(20))
+          .toList();
+
+  static Future<List<Map<String, dynamic>>> getDessert() async =>
+      await userCollection.find(where.gt("dishType", "dessert")).toList();
+
   static Future<List<Map<String, dynamic>>> getIMDB_8() async =>
       await userCollection.find(where.gt("IMDB_Rating", 7.9)).toList();
   static Future<List<Map<String, dynamic>>> getIMDB_9() async =>
@@ -28,19 +49,4 @@ class MongoDatabase {
       await userCollection.find(where.gt("Released_Year", 2019)).toList();
   static Future<List<Map<String, dynamic>>> getMustSee() async =>
       await userCollection.find(where.gt("Meta_score", 89)).toList();
-
-  // INSERT //
-  static Future<String> insert(MongoDbMovieModel data) async {
-    try {
-      var result = await userCollection.insertOne(data.toJson());
-      if (result.isSuccess) {
-        return "Data Inserted";
-      } else {
-        return "Something Wrong while inserting data!";
-      }
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
 }
