@@ -2,7 +2,7 @@
     package="com.example.ne_yapsam_ki">
    <application
         android:label="ne_yapsam_ki"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/constants/globals.dart';
+import 'package:ne_yapsam_ki/models/movie/movie_model.dart';
+import 'package:ne_yapsam_ki/models/series/series_model.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_description.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
@@ -13,7 +16,7 @@ class TvGenrePage extends StatefulWidget {
 }
 
 class _TvGenrePageState extends State<TvGenrePage> {
-  List tvSeries = [];
+  List<Series> tvSeries = [];
 
   final String apikey = '11c5704a37b7b08b3083df59a703204e';
 
@@ -39,7 +42,7 @@ class _TvGenrePageState extends State<TvGenrePage> {
         await tmdbWithCustomLogs.v3.discover.getTvShows(withGenres: "$genreID");
 
     setState(() {
-      tvSeries = movielistresult["results"];
+      tvSeries = Series.seriesFromSnapshot(movielistresult["results"]);
       _isLoading = false;
     });
   }
@@ -78,14 +81,7 @@ class _TvGenrePageState extends State<TvGenrePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TvDescription(
-                            name: tvSeries[index]['name'],
-                            bannerurl: 'https://image.tmdb.org/t/p/w500' +
-                                tvSeries[index]['backdrop_path'],
-                            posterurl: 'https://image.tmdb.org/t/p/w500' +
-                                tvSeries[index]['poster_path'],
-                            description: tvSeries[index]['overview'],
-                            vote: tvSeries[index]['vote_average'].toString(),
-                            launch_on: tvSeries[index]['first_air_date'],
+                            series: tvSeries[index],
                           ),
                         ),
                       );
@@ -94,8 +90,10 @@ class _TvGenrePageState extends State<TvGenrePage> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                              'https://image.tmdb.org/t/p/w500' +
-                                  tvSeries[index]['poster_path']),
+                            tvSeries[index].posterPath != null
+                                ? TMDB_URL_BASE + tvSeries[index].posterPath!
+                                : "null",
+                          ),
                         ),
                       ),
                       height: 200,

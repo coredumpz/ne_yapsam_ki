@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
+import '../../models/movie/movie_model.dart';
 import 'description.dart';
 
 class GenrePage extends StatefulWidget {
@@ -14,7 +16,7 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  List movies = [];
+  List<Movie> movies = [];
 
   final String apikey = '11c5704a37b7b08b3083df59a703204e';
 
@@ -40,7 +42,7 @@ class _GenrePageState extends State<GenrePage> {
         await tmdbWithCustomLogs.v3.discover.getMovies(withGenres: "$genreID");
 
     setState(() {
-      movies = movielistresult["results"];
+      movies = Movie.moviesFromSnapshot(movielistresult["results"]);
       _isLoading = false;
     });
   }
@@ -78,15 +80,8 @@ class _GenrePageState extends State<GenrePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Description(
-                            name: movies[index]['title'],
-                            bannerurl: 'https://image.tmdb.org/t/p/w500' +
-                                movies[index]['backdrop_path'],
-                            posterurl: 'https://image.tmdb.org/t/p/w500' +
-                                movies[index]['poster_path'],
-                            description: movies[index]['overview'],
-                            vote: movies[index]['vote_average'].toString(),
-                            launch_on: movies[index]['release_date'],
+                          builder: (context) => MovieDescription(
+                            movie: movies[index],
                           ),
                         ),
                       );
@@ -95,8 +90,10 @@ class _GenrePageState extends State<GenrePage> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                              'https://image.tmdb.org/t/p/w500' +
-                                  movies[index]['poster_path']),
+                            movies[index].posterPath != null
+                                ? TMDB_URL_BASE + movies[index].posterPath!
+                                : URL_DEFAULT,
+                          ),
                         ),
                       ),
                       height: 200,

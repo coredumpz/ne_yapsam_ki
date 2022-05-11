@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ne_yapsam_ki/constants/globals.dart';
+import 'package:ne_yapsam_ki/pages/movies_TMDB/movies_more.dart';
 
+import '../../models/movie/movie_model.dart';
 import 'description.dart';
 
 class MoviesList extends StatelessWidget {
-  final List movies;
+  final List<Movie> movies;
   final String title;
 
   const MoviesList({required this.movies, required this.title});
@@ -15,13 +18,43 @@ class MoviesList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title + " Movies",
-            style: GoogleFonts.mcLaren(
-              textStyle: TextStyle(color: Colors.white, fontSize: 20),
-            ),
+          Row(
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.mcLaren(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              const Spacer(),
+              title != "You may like these also... "
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MoreMovies(
+                                      title: title,
+                                    )),
+                          );
+                        },
+                        child: Text(
+                          "See More..",
+                          style: GoogleFonts.mcLaren(
+                            textStyle: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             height: 270,
             child: ListView.builder(
@@ -33,15 +66,8 @@ class MoviesList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Description(
-                          name: movies[index]['title'],
-                          bannerurl: 'https://image.tmdb.org/t/p/w500' +
-                              movies[index]['backdrop_path'],
-                          posterurl: 'https://image.tmdb.org/t/p/w500' +
-                              movies[index]['poster_path'],
-                          description: movies[index]['overview'],
-                          vote: movies[index]['vote_average'].toString(),
-                          launch_on: movies[index]['release_date'],
+                        builder: (context) => MovieDescription(
+                          movie: movies[index],
                         ),
                       ),
                     );
@@ -54,8 +80,10 @@ class MoviesList extends StatelessWidget {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
-                                  'https://image.tmdb.org/t/p/w500' +
-                                      movies[index]['poster_path']),
+                                movies[index].posterPath != null
+                                    ? TMDB_URL_BASE + movies[index].posterPath!
+                                    : URL_DEFAULT,
+                              ),
                             ),
                           ),
                           height: 200,
@@ -63,7 +91,7 @@ class MoviesList extends StatelessWidget {
                         SizedBox(height: 5),
                         Container(
                           child: Text(
-                            movies[index]['title'] ?? 'Loading',
+                            movies[index].title ?? "Not Avaliable",
                             style: GoogleFonts.mcLaren(
                               textStyle: TextStyle(
                                   color: Colors.white, fontSize: 14.5),

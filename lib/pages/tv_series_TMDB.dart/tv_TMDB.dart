@@ -1,9 +1,16 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ne_yapsam_ki/pages/search/tv_search.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/series_lists.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_genre_page.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
-import '../movies_TMDB/genre_model.dart';
+import '../../models/genre_model.dart';
+import '../../models/movie/movie_model.dart';
+import '../../models/series/series_model.dart';
+import '../search/movie_search.dart';
 
 class TvTMDB extends StatefulWidget {
   TvTMDB({Key? key}) : super(key: key);
@@ -16,9 +23,12 @@ class _TvTMDBState extends State<TvTMDB> {
   final String apikey = '11c5704a37b7b08b3083df59a703204e';
   final String readaccesstoken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMWM1NzA0YTM3YjdiMDhiMzA4M2RmNTlhNzAzMjA0ZSIsInN1YiI6IjYyMjRhM2M3NjgwYmU4MDA2ZGNhYTQ2NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.J782z7K-CcVx6sVjev285CnNL9caoKLiU5-doChf6Ik.C_Bkz_T8OybTGo3HfYsESNjN46LBYdw3LHdF-1TzYYs';
-  List popularSeries = [];
-  List topratedSeries = [];
-  List latestSeries = [];
+  List<Series> popularSeries = [];
+  List<Series> topratedSeries = [];
+  List<Series> latestSeries = [];
+  int value = 0;
+  bool positive = false;
+
   List tvGenres = [];
   bool _isLoading = true;
 
@@ -37,20 +47,16 @@ class _TvTMDBState extends State<TvTMDB> {
       ),
     );
 
-    //Map trendingresult = await tmdbWithCustomLogs.v3.trending.getTrending();
     Map popularresult = await tmdbWithCustomLogs.v3.tv.getPopular();
     Map topratedresult = await tmdbWithCustomLogs.v3.tv.getTopRated();
     Map latestresult = await tmdbWithCustomLogs.v3.tv.getOnTheAir();
     Map tvgenreresult = await tmdbWithCustomLogs.v3.genres.getTvlist();
     tvGenres = Genre.genresFromSnapshot(tvgenreresult["genres"]);
 
-    print(latestresult);
-
     setState(() {
-      //trendingSeries = trendingresult["results"];
-      popularSeries = popularresult["results"];
-      topratedSeries = topratedresult["results"];
-      latestSeries = latestresult["results"];
+      popularSeries = Series.seriesFromSnapshot(popularresult["results"]);
+      topratedSeries = Series.seriesFromSnapshot(topratedresult["results"]);
+      latestSeries = Series.seriesFromSnapshot(latestresult["results"]);
       _isLoading = false;
     });
   }
@@ -63,29 +69,29 @@ class _TvTMDBState extends State<TvTMDB> {
           ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: [
-                SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                      itemCount: tvGenres.length,
-                      itemBuilder: (context, index) {
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TvGenrePage(
-                                    genreID: tvGenres[index].id,
-                                    genreName: tvGenres[index].genre,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(tvGenres[index].genre),
-                          ),
-                        );
-                      }),
+                Container(
+                  child: IconButton(
+                    iconSize: 18,
+                    alignment: Alignment.centerLeft,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TVSearch(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(FontAwesomeIcons.search),
+                  ),
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 8,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 TvSeries(
                   series: popularSeries,

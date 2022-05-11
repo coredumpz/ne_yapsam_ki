@@ -1,6 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_book.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_game.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_movie.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_recipe.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_tv.dart';
 import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +30,6 @@ class _LuckWheelState extends State<LuckWheel>
     Luck("movie", Colors.accents[0]),
     Luck("tvseries", Colors.accents[2]),
     Luck("book", Colors.accents[4]),
-    Luck("song", Colors.accents[6]),
     Luck("game", Colors.accents[8]),
     Luck("food", Colors.accents[10]),
   ];
@@ -84,10 +89,35 @@ class _LuckWheelState extends State<LuckWheel>
               _ctrl.dispose();
               Provider.of<WheelProvider>(context, listen: false).setWheelIndex =
                   _index;
+
               Navigator.pop(context);
-              Navigator.of(context).pushNamed(
-                "/result",
-              );
+
+              int wheelIndex =
+                  Provider.of<WheelProvider>(context, listen: false).wheelIndex;
+              print(wheelIndex);
+              switch (wheelIndex) {
+                case 0:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const MovieResult()));
+                  break;
+                case 1:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const TVResult()));
+                  break;
+                case 2:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const BookResult()));
+                  break;
+                case 3:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const GameResult()));
+                  break;
+                case 4:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const RecipeResult()));
+                  break;
+                default:
+              }
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.lightGreen),

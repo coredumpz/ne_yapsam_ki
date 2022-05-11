@@ -85,25 +85,27 @@ class _RecipeListState extends State<RecipeList> {
         );
       },
       child: Container(
+        padding: const EdgeInsets.all(5),
         width: 140,
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
+                  fit: BoxFit.cover,
                   image: NetworkImage(
-                    recipe.image ?? URL_RECIPE,
+                    adjustImage(recipe.image.toString()) ?? URL_RECIPE,
                   ),
                 ),
               ),
-              height: 200,
+              height: 180,
             ),
             SizedBox(height: 5),
             Container(
               child: Text(
-                recipe.label ?? "Not Avaliable",
+                adjustName(recipe.name),
                 style: GoogleFonts.mcLaren(
-                  textStyle: const TextStyle(color: Colors.white, fontSize: 13),
+                  textStyle: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             )
@@ -115,15 +117,36 @@ class _RecipeListState extends State<RecipeList> {
 
   mongoMethod() {
     switch (widget.mealType) {
-      case "breakfast":
+      case "Breakfast":
         return MongoDatabase.getBreakfast();
-      case "lunch":
+      case "Lunch/Snacks":
         return MongoDatabase.getLunch();
-      case "dinner":
-        return MongoDatabase.getDinner();
-      case "snack":
-        return MongoDatabase.getSnack();
+      case "Dessert":
+        return MongoDatabase.getDessert();
+      case "High Rating":
+        return MongoDatabase.getHighRating();
+      case "< 15 Mins":
+        return MongoDatabase.get15Min();
       default:
+    }
+  }
+
+  adjustImage(String item) {
+    const start = "https";
+    const end = "jpg";
+
+    final startIndex = item.indexOf(start);
+    final endIndex = item.indexOf(end, startIndex + start.length);
+
+    item = start + item.substring(startIndex + start.length, endIndex) + end;
+    return item;
+  }
+
+  adjustName(String name) {
+    if (name.length > 25) {
+      return name.substring(0, 22) + "...";
+    } else {
+      return name;
     }
   }
 }

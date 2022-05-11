@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ne_yapsam_ki/models/series/series_model.dart';
+import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/series_more.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_description.dart';
 
 import '../../constants/globals.dart';
+import '../../models/movie/movie_model.dart';
 import '../movies_TMDB/description.dart';
 
 class TvSeries extends StatelessWidget {
-  final List series;
+  final List<Series> series;
   final String title;
 
   const TvSeries({required this.series, required this.title});
@@ -17,11 +20,41 @@ class TvSeries extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title + ' Series',
-            style: GoogleFonts.mcLaren(
-              textStyle: TextStyle(color: Colors.white, fontSize: 20),
-            ),
+          Row(
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.mcLaren(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+              const Spacer(),
+              title != "You may like these also... "
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MoreSeries(
+                                      title: title,
+                                    )),
+                          );
+                        },
+                        child: Text(
+                          "See More..",
+                          style: GoogleFonts.mcLaren(
+                            textStyle: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
           ),
           SizedBox(height: 10),
           Container(
@@ -36,14 +69,7 @@ class TvSeries extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TvDescription(
-                              name: series[index]['original_name'],
-                              bannerurl: 'https://image.tmdb.org/t/p/w500' +
-                                  series[index]['backdrop_path'],
-                              posterurl: 'https://image.tmdb.org/t/p/w500' +
-                                  series[index]['poster_path'],
-                              description: series[index]['overview'],
-                              vote: series[index]['vote_average'].toString(),
-                              launch_on: series[index]['first_air_date'],
+                              series: series[index],
                             ),
                           ),
                         );
@@ -56,10 +82,10 @@ class TvSeries extends StatelessWidget {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                      series[index]['poster_path'] == null
+                                      series[index].posterPath == null
                                           ? URL_DEFAULT
-                                          : 'https://image.tmdb.org/t/p/w500' +
-                                              series[index]['poster_path']),
+                                          : TMDB_URL_BASE +
+                                              series[index].posterPath!),
                                   fit: BoxFit.fitHeight,
                                 ),
                               ),
@@ -68,9 +94,7 @@ class TvSeries extends StatelessWidget {
                             const SizedBox(height: 5),
                             Container(
                               child: Text(
-                                series[index]['original_name'] != null
-                                    ? series[index]['original_name']
-                                    : 'Loading',
+                                series[index].title ?? "null",
                                 style: GoogleFonts.mcLaren(
                                   textStyle: TextStyle(
                                       color: Colors.white, fontSize: 14.5),

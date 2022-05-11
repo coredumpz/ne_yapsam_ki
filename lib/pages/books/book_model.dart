@@ -1,13 +1,29 @@
 class BookModel {
-  String? id, title, subtitle, description, thumbnail, bookUrl;
+  String? id;
+  String? title;
+  String? subtitle;
+  String? description;
+  String? thumbnail;
+  String? bookUrl;
+  String? publisher;
+  String? publishedDate;
+  int? pageCount;
+  List? authors;
+  List? categories;
 
-  BookModel(
-      {this.id,
-      this.title,
-      this.subtitle,
-      this.description,
-      this.thumbnail,
-      this.bookUrl});
+  BookModel({
+    this.id,
+    this.title,
+    this.subtitle,
+    this.description,
+    this.thumbnail,
+    this.bookUrl,
+    this.authors,
+    this.publisher,
+    this.publishedDate,
+    this.pageCount,
+    this.categories,
+  });
 
   factory BookModel.fromApi(Map<String, dynamic> data) {
     String getThumbnailSafety(Map<String, dynamic> data) {
@@ -20,11 +36,17 @@ class BookModel {
     }
 
     return BookModel(
-        id: data['id'],
-        title: data['volumeInfo']['title'],
-        description: data['volumeInfo']['description'],
-        subtitle: data['volumeInfo']['subtitle'],
-        thumbnail: getThumbnailSafety(data).replaceAll("http", "https"),
-        bookUrl: data['volumeInfo']['previewLink']);
+      id: data['id'],
+      title: data['volumeInfo']['title'],
+      description: data['volumeInfo']['description'],
+      subtitle: data['volumeInfo']['subtitle'],
+      thumbnail: getThumbnailSafety(data).replaceAll("http", "https"),
+      bookUrl: data['volumeInfo']['previewLink'],
+      authors: data["volumeInfo"]["authors"],
+      publisher: data["volumeInfo"]["publisher"],
+      publishedDate: data["volumeInfo"]["publishedDate"],
+      pageCount: data["volumeInfo"]["pageCount"],
+      categories: data["volumeInfo"]["categories"],
+    );
   }
 }

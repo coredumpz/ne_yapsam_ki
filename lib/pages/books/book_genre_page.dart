@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:ne_yapsam_ki/pages/books/book_description.dart';
+import 'package:ne_yapsam_ki/pages/books/book_detail.dart';
 
 import 'book_model.dart';
 
@@ -18,7 +18,6 @@ class BooksGenrePage extends StatefulWidget {
 
 class _GenrePageState extends State<BooksGenrePage> {
   List<BookModel> books = [];
-
   bool _isLoading = true;
 
   @override
@@ -27,12 +26,11 @@ class _GenrePageState extends State<BooksGenrePage> {
     loadGenre(widget.genreName);
   }
 
-  loadGenre(String genreName) async {
+  loadGenre(String genre) async {
     try {
       final response = await http.get(Uri.parse(
-          "https://www.googleapis.com/books/v1/volumes?q=subject:$genreName"));
+          "https://www.googleapis.com/books/v1/volumes?q=subject:$genre&orderBy=newest&maxResults=40"));
 
-      print("response.body ${response.body}");
       final items = jsonDecode(response.body)['items'];
       List<BookModel> bookList = [];
       for (var item in items) {
@@ -41,13 +39,13 @@ class _GenrePageState extends State<BooksGenrePage> {
 
       books.addAll(bookList);
       print(books.length);
+
+      setState(() {
+        _isLoading = false;
+      });
     } catch (e) {
       print("error get books $e");
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -85,7 +83,7 @@ class _GenrePageState extends State<BooksGenrePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BookDescription(
+                          builder: (context) => DetailPage(
                             bookID: books[index].id!,
                           ),
                         ),

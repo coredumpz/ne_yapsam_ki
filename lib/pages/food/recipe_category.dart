@@ -92,7 +92,7 @@ class _RecipeCategoryState extends State<RecipeCategory> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
-                    recipe.image ?? URL_RECIPE,
+                    adjustImage(recipe.image.toString()),
                   ),
                 ),
               ),
@@ -101,7 +101,7 @@ class _RecipeCategoryState extends State<RecipeCategory> {
             SizedBox(height: 5),
             Container(
               child: Text(
-                recipe.label ?? "Not Avaliable",
+                recipe.name,
                 style: GoogleFonts.mcLaren(
                   textStyle: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
@@ -115,9 +115,26 @@ class _RecipeCategoryState extends State<RecipeCategory> {
 
   mongoMethod() {
     switch (widget.dishType) {
-      case "desserts":
+      case "Dessert":
         return MongoDatabase.getDessert();
+      case "Vegetable":
+        return MongoDatabase.getVegetable();
+      case "Beverages":
+        return MongoDatabase.getBeverages();
+      case "Sauces":
+        return MongoDatabase.getSauces();
       default:
     }
+  }
+
+  adjustImage(String item) {
+    const start = "https";
+    const end = "jpg";
+
+    final startIndex = item.indexOf(start);
+    final endIndex = item.indexOf(end, startIndex + start.length);
+
+    item = start + item.substring(startIndex + start.length, endIndex) + end;
+    return item;
   }
 }

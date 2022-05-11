@@ -14,47 +14,51 @@ String mongoDbRecipeModelToJson(RecipeModel data) => json.encode(data.toJson());
 class RecipeModel {
   RecipeModel({
     required this.id,
+    required this.name,
     required this.image,
     required this.calories,
-    required this.url,
-    required this.label,
     required this.ingredients,
-    required this.mealType,
-    required this.totalTime,
-    required this.dishType,
+    required this.recipeCategory,
+    required this.rating,
+    required this.reviewCount,
+    required this.servings,
+    required this.description,
   });
 
   ObjectId id;
+  String name;
   String? image;
   double calories;
-  String url;
-  String? label;
-  List ingredients;
-  String mealType;
-  double totalTime;
-  List dishType;
+  String ingredients;
+  String recipeCategory;
+  double rating;
+  int reviewCount;
+  int servings;
+  String description;
 
   factory RecipeModel.fromJson(Map<String, dynamic> json) => RecipeModel(
         id: json["_id"],
-        image: json["image"],
-        calories: json["calories"],
-        url: json["url"],
-        label: json["label"],
-        ingredients: json["ingredients"],
-        mealType: json["mealType"],
-        totalTime: json["totalTime"],
-        dishType: json["dishType"],
+        name: json["Name"],
+        image: json["Images"],
+        calories: json["Calories"],
+        ingredients: json["RecipeIngredientParts"],
+        recipeCategory: json["RecipeCategory"],
+        rating: json["AggregatedRating"],
+        reviewCount: json["ReviewCount"],
+        servings: json["RecipeServings"],
+        description: json["RecipeInstructions"],
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
+        "name": name,
         "image": image,
         "calories": calories,
-        "url": url,
-        "label": label,
         "ingredients": ingredients,
-        "mealType": mealType,
-        "totalTime": totalTime,
-        "dishType": dishType
+        "recipeCategory": recipeCategory,
+        "rating": rating,
+        "reviewCount": reviewCount,
+        "servings": servings,
+        "description": description,
       };
 }

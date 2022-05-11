@@ -1,9 +1,12 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/pages/books/books_home.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_home.dart';
+import 'package:ne_yapsam_ki/pages/games/game_home.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_TMDB.dart';
 
 import 'movies_TMDB/homeTMDB.dart';
@@ -12,6 +15,7 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,17 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const Divider(),
+          Text(
+            "User Email: " + user.email!,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.mcLaren(
+              textStyle: const TextStyle(
+                color: Colors.black,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          const Divider(),
           _createDrawerItem(
             icon: FontAwesomeIcons.home,
             text: 'Home Page',
@@ -82,15 +97,26 @@ class HomePage extends StatelessWidget {
             onTap: () => Navigator.of(context).pushNamed("/wheel"),
           ),
           _createDrawerItem(
+            icon: FontAwesomeIcons.adversal,
+            text: 'Survey',
+            onTap: () => Navigator.of(context).pushNamed("/survey"),
+          ),
+          _createDrawerItem(
             icon: Icons.face,
             text: 'Suggestions',
           ),
           const Divider(),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.signInAlt,
-            text: 'Sign In',
-            onTap: () => Navigator.of(context).pushNamed("/login"),
-          ),
+          user.isAnonymous
+              ? _createDrawerItem(
+                  icon: FontAwesomeIcons.signInAlt,
+                  text: 'Sign In',
+                  onTap: () => Navigator.of(context).pushNamed("/login"),
+                )
+              : _createDrawerItem(
+                  icon: FontAwesomeIcons.signOutAlt,
+                  text: 'Sign Out',
+                  onTap: () => FirebaseAuth.instance.signOut(),
+                ),
         ],
       ),
     );
@@ -115,7 +141,7 @@ class HomePage extends StatelessWidget {
   buildContent() {
     return SafeArea(
       child: DefaultTabController(
-        length: 6,
+        length: 5,
         child: Column(
           children: <Widget>[
             ButtonsTabBar(
@@ -145,10 +171,6 @@ class HomePage extends StatelessWidget {
                   icon: Icon(FontAwesomeIcons.gamepad),
                   text: " Games",
                 ),
-                Tab(
-                  icon: Icon(FontAwesomeIcons.music),
-                  text: "Song",
-                ),
               ],
             ),
             Expanded(
@@ -158,12 +180,7 @@ class HomePage extends StatelessWidget {
                   TvTMDB(),
                   BooksHome(),
                   RecipeHome(),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.gamepad),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.music),
-                  ),
+                  HomeGame(),
                 ],
               ),
             ),
