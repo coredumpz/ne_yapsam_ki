@@ -1,14 +1,22 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ne_yapsam_ki/components/dialogs/show_alert_dialog.dart';
+import 'package:ne_yapsam_ki/pages/books/books_home.dart';
+import 'package:ne_yapsam_ki/pages/food/recipe_home.dart';
+import 'package:ne_yapsam_ki/pages/games/game_home.dart';
+import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_TMDB.dart';
 
-import 'movies_pages/movies.dart';
+import 'movies_TMDB/homeTMDB.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +45,13 @@ class HomePage extends StatelessWidget {
       ),
       actions: [
         IconButton(
+          onPressed: () => Navigator.of(context).pushNamed("/survey"),
+          icon: const Icon(
+            FontAwesomeIcons.clipboardList,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
           onPressed: () => Navigator.of(context).pushNamed("/wheel"),
           icon: const Icon(
             FontAwesomeIcons.dice,
@@ -60,34 +75,97 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const Divider(),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.home,
-            text: 'Home Page',
-            onTap: () => Navigator.of(context).pushNamed("/homepage"),
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.userAlt,
-            text: 'My Account',
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.solidHeart,
-            text: 'Favorites',
-          ),
-          _createDrawerItem(
-            icon: FontAwesomeIcons.dice,
-            text: 'Spinner',
-            onTap: () => Navigator.of(context).pushNamed("/wheel"),
-          ),
-          _createDrawerItem(
-            icon: Icons.face,
-            text: 'Suggestions',
+          Center(
+            child: Text(
+              user!.isAnonymous
+                  ? "You are not signed in."
+                  : "User Email: " + user!.email.toString(),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.mcLaren(
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 13,
+                ),
+              ),
+            ),
           ),
           const Divider(),
           _createDrawerItem(
-            icon: FontAwesomeIcons.signInAlt,
-            text: 'Sign In',
-            onTap: () => Navigator.of(context).pushNamed("/login"),
+            icon: FontAwesomeIcons.userAlt,
+            text: 'My Account',
+            onTap: () {
+              user!.isAnonymous
+                  ? showAlertDialog(
+                      context,
+                      content: "You have to sign in first!",
+                      defaultActionText: "Ok",
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.of(context).popAndPushNamed("/login");
+                      },
+                      cancelActionText: "Cancel",
+                      onPressedCancel: () => Navigator.of(context).pop(),
+                    )
+                  : Navigator.of(context).pushNamed("/profile");
+            },
           ),
+          _createDrawerItem(
+              icon: FontAwesomeIcons.solidHeart,
+              text: 'Favorites',
+              onTap: () {
+                user!.isAnonymous
+                    ? showAlertDialog(
+                        context,
+                        content: "You have to sign in first!",
+                        defaultActionText: "Ok",
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.of(context).popAndPushNamed("/login");
+                        },
+                        cancelActionText: "Cancel",
+                        onPressedCancel: () => Navigator.of(context).pop(),
+                      )
+                    : Navigator.of(context).pushNamed("/favorite");
+              }),
+          _createDrawerItem(
+            icon: FontAwesomeIcons.dice,
+            text: 'Luck Wheel',
+            onTap: () => Navigator.of(context).pushNamed("/wheel"),
+          ),
+          _createDrawerItem(
+            icon: FontAwesomeIcons.clipboardList,
+            text: 'Let Me Help',
+            onTap: () => Navigator.of(context).pushNamed("/survey"),
+          ),
+          const Divider(),
+          user!.isAnonymous
+              ? _createDrawerItem(
+                  icon: FontAwesomeIcons.signInAlt,
+                  text: 'Sign In',
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context).popAndPushNamed("/login");
+                  })
+              : _createDrawerItem(
+                  icon: FontAwesomeIcons.signOutAlt,
+                  text: 'Sign Out',
+                  onTap: () async {
+                    showAlertDialog(
+                      context,
+                      content: "Do you really want to sign out?",
+                      defaultActionText: "Yes",
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("You are successfully signed out."),
+                        ));
+                        Navigator.of(context).popAndPushNamed("/login");
+                      },
+                      cancelActionText: "No",
+                      onPressedCancel: () => Navigator.of(context).pop(),
+                    );
+                  }),
         ],
       ),
     );
@@ -112,7 +190,7 @@ class HomePage extends StatelessWidget {
   buildContent() {
     return SafeArea(
       child: DefaultTabController(
-        length: 6,
+        length: 5,
         child: Column(
           children: <Widget>[
             ButtonsTabBar(
@@ -136,37 +214,22 @@ class HomePage extends StatelessWidget {
                 ),
                 Tab(
                   icon: Icon(FontAwesomeIcons.utensils),
-                  text: "Food",
+                  text: "Recipes",
                 ),
                 Tab(
                   icon: Icon(FontAwesomeIcons.gamepad),
                   text: " Games",
-                ),
-                Tab(
-                  icon: Icon(FontAwesomeIcons.music),
-                  text: "Song",
                 ),
               ],
             ),
             Expanded(
               child: TabBarView(
                 children: <Widget>[
-                  MoviesPage(),
-                  const Center(
-                    child: Icon(Icons.tv_outlined),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.book),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.utensils),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.gamepad),
-                  ),
-                  const Center(
-                    child: Icon(FontAwesomeIcons.music),
-                  ),
+                  HomeTMDB(),
+                  TvTMDB(),
+                  BooksHome(),
+                  RecipeHome(),
+                  HomeGame(),
                 ],
               ),
             ),

@@ -1,6 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_book.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_game.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_movie.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_recipe.dart';
+import 'package:ne_yapsam_ki/pages/wheel_pages/result_tv.dart';
 import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +29,6 @@ class _LuckWheelState extends State<LuckWheel>
     Luck("movie", Colors.accents[0]),
     Luck("tvseries", Colors.accents[2]),
     Luck("book", Colors.accents[4]),
-    Luck("song", Colors.accents[6]),
     Luck("game", Colors.accents[8]),
     Luck("food", Colors.accents[10]),
   ];
@@ -55,45 +59,31 @@ class _LuckWheelState extends State<LuckWheel>
       body: Flex(
         direction: Axis.vertical,
         children: [
-          Container(
-            height: 550,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.green, Colors.blue.withOpacity(0.2)])),
-            child: AnimatedBuilder(
-              animation: _ani,
-              builder: (context, child) {
-                final _value = _ani.value;
-                final _angle = _value * this._angle;
-                return Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    BoardView(items: _items, current: _current, angle: _angle),
-                    _buildGo(),
-                    _buildResult(_value),
-                  ],
-                );
-              },
+          Flexible(
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.green, Colors.blue.withOpacity(0.2)])),
+              child: AnimatedBuilder(
+                animation: _ani,
+                builder: (context, child) {
+                  final _value = _ani.value;
+                  final _angle = _value * this._angle;
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      BoardView(
+                          items: _items, current: _current, angle: _angle),
+                      _buildGo(),
+                      _buildResult(_value),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              var _index = _calIndex(_ani.value * _angle + _current);
-              _ctrl.dispose();
-              Provider.of<WheelProvider>(context, listen: false).setWheelIndex =
-                  _index;
-              Navigator.pop(context);
-              Navigator.of(context).pushNamed(
-                "/result",
-              );
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.lightGreen),
-            ),
-            child: const Text("See The Result"),
-          )
         ],
       ),
     );
@@ -127,6 +117,8 @@ class _LuckWheelState extends State<LuckWheel>
         _current = (_current + _random);
         _current = _current - _current ~/ 1;
         _ctrl.reset();
+
+        goToResultPage();
       });
     }
   }
@@ -147,5 +139,40 @@ class _LuckWheelState extends State<LuckWheel>
         child: Image.asset(_asset, height: 80, width: 80),
       ),
     );
+  }
+
+  goToResultPage() {
+    var _index = _calIndex(_ani.value * _angle + _current);
+    _ctrl.dispose();
+    Provider.of<WheelProvider>(context, listen: false).setWheelIndex = _index;
+
+    Navigator.pop(context);
+
+    int wheelIndex =
+        Provider.of<WheelProvider>(context, listen: false).wheelIndex;
+
+    switch (wheelIndex) {
+      case 0:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MovieResult()));
+        break;
+      case 1:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const TVResult()));
+        break;
+      case 2:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const BookResult()));
+        break;
+      case 3:
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const GameResult()));
+        break;
+      case 4:
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const RecipeResult()));
+        break;
+      default:
+    }
   }
 }

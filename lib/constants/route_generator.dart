@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ne_yapsam_ki/pages/movies_pages/display.dart';
-import 'package:ne_yapsam_ki/insert.dart';
+import 'package:ne_yapsam_ki/pages/favorite/favorite.dart';
 import 'package:ne_yapsam_ki/pages/login_pages/login_page.dart';
 import 'package:ne_yapsam_ki/pages/home_page.dart';
 import 'package:ne_yapsam_ki/pages/landing_page.dart';
-import 'package:ne_yapsam_ki/pages/login_pages/sign_up_page.dart';
+import 'package:ne_yapsam_ki/pages/login_pages/profile_page.dart';
+import 'package:ne_yapsam_ki/pages/survey/book/book_survey.dart';
+import 'package:ne_yapsam_ki/pages/survey/game/game_survey.dart';
+import 'package:ne_yapsam_ki/pages/survey/movie/movie_survey.dart';
+import 'package:ne_yapsam_ki/pages/survey/recipe/recipe_survey.dart';
+import 'package:ne_yapsam_ki/pages/survey/survey.dart';
 import 'package:ne_yapsam_ki/pages/wheel_pages/luck_wheel.dart';
-import 'package:ne_yapsam_ki/pages/wheel_pages/result_page.dart';
+
+import '../pages/survey/tv/survey_tv.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,16 +20,26 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const LandingPage());
       case "/login":
         return MaterialPageRoute(builder: (_) => const LoginPage());
-      case "/signup":
-        return MaterialPageRoute(builder: (_) => const SingUpPage());
       case "/homepage":
         return MaterialPageRoute(builder: (_) => HomePage());
       case "/wheel":
         return MaterialPageRoute(builder: (_) => LuckWheel());
-      case "/result":
-        return MaterialPageRoute(builder: (_) => const WheelResultPage());
-      case "/test":
-        return MaterialPageRoute(builder: (_) => MongoDBDisplay());
+      case "/favorite":
+        return MaterialPageRoute(builder: (_) => FavoritePage());
+      case "/profile":
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
+      case "/survey":
+        return MaterialPageRoute(builder: (_) => SurveyPage());
+      case "/surveyMovie":
+        return MaterialPageRoute(builder: (_) => MovieSurvey());
+      case "/surveyTV":
+        return MaterialPageRoute(builder: (_) => TVSurvey());
+      case "/surveyBook":
+        return MaterialPageRoute(builder: (_) => BookSurvey());
+      case "/surveyRecipe":
+        return MaterialPageRoute(builder: (_) => RecipeSurvey());
+      case "/surveyGame":
+        return MaterialPageRoute(builder: (_) => GameSurvey());
       default:
         return _errorRoute();
     }
