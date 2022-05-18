@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
-import 'package:ne_yapsam_ki/pages/movies_TMDB/description.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_description.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
-import '../../models/movie/movie_model.dart';
 import '../../models/series/series_model.dart';
 
 class MoreSeries extends StatefulWidget {

@@ -1,11 +1,8 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
-import 'package:ne_yapsam_ki/pages/food/recipe_category.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_lists.dart';
 import 'package:ne_yapsam_ki/pages/search/recipe_search.dart';
 
@@ -47,14 +44,13 @@ class _RecipeHomeState extends State<RecipeHome> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          SizedBox(
-            height: 500,
-            child: ListView.builder(
-              itemCount: mealTypes.length,
-              itemBuilder: (context, index) {
-                return RecipeList(mealType: mealTypes[index]);
-              },
-            ),
+          ListView.builder(
+            physics: ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: mealTypes.length,
+            itemBuilder: (context, index) {
+              return RecipeList(mealType: mealTypes[index]);
+            },
           ),
         ],
       ),

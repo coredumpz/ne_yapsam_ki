@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/pages/books/book_detail.dart';
-import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../books/book_model.dart';
@@ -24,14 +22,6 @@ class _BookResultState extends State<BookResult> {
   int randomNum = 0;
 
   late BookModel book;
-
-  List<String> imgList = [
-    "movie",
-    "tvseries",
-    "book",
-    "game",
-    "food",
-  ];
 
   final _random = Random();
 
@@ -57,8 +47,6 @@ class _BookResultState extends State<BookResult> {
         bookList.add(BookModel.fromApi(item));
       }
 
-      print(items);
-
       book = bookList[randomNum];
 
       setState(() {
@@ -73,6 +61,18 @@ class _BookResultState extends State<BookResult> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            color: Colors.black,
+            alignment: Alignment.topRight,
+            iconSize: 40.0,
+            onPressed: () => setState(() {
+              _isLoading = true;
+              loadContent();
+            }),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.navigate_before),
@@ -80,97 +80,69 @@ class _BookResultState extends State<BookResult> {
           iconSize: 30,
           color: Colors.black,
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white70,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.green, Colors.blue.withOpacity(0.2)],
+            colors: [Colors.white70, Colors.grey.withOpacity(0.2)],
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                "assets/images/${imgList[getResultIndex()]}.png",
-                scale: 4,
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Text(
-                    "YOUR ${imgList[getResultIndex()].toUpperCase()} IS :",
-                    style: GoogleFonts.mcLaren(
-                      textStyle: const TextStyle(
-                          color: Color.fromARGB(255, 13, 135, 17),
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            buildResult(context),
-          ],
-        ),
+        child: bookCard(),
       ),
     );
   }
 
-  getResultIndex() {
-    return Provider.of<WheelProvider>(context).wheelIndex;
-  }
-
-  buildResult(BuildContext context) {
+  bookCard() {
     return _isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20),
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network(
-                    book.thumbnail.toString(),
-                    fit: BoxFit.fitHeight,
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetail(
+                    bookID: book.id.toString(),
                   ),
                 ),
-                Center(
-                  child: Container(
-                    padding:
-                        const EdgeInsets.only(top: 20, right: 30, left: 30),
-                    child: TextButton(
-                      child: Text(
-                        book.title.toString(),
-                        style: GoogleFonts.mcLaren(
-                          textStyle: const TextStyle(
-                              color: Color.fromARGB(255, 13, 135, 17),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                            book.thumbnail != null
+                                ? book.thumbnail!
+                                : URL_DEFAULT,
+                          ),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                              bookID: book.id!,
-                            ),
-                          ),
-                        );
-                      },
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    height: 70,
+                    alignment: Alignment.center,
+                    child: Text(
+                      book.title.toString(),
+                      style: GoogleFonts.mcLaren(
+                        textStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
   }

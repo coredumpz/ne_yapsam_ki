@@ -7,7 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/pages/books/book_detail.dart';
-import 'package:number_paginator/number_paginator.dart';
 
 import '../books/book_model.dart';
 import 'package:http/http.dart' as http;
@@ -41,7 +40,6 @@ class _GenrePageState extends State<BookSearch> {
       }
 
       books.addAll(bookList);
-      print(books.length);
 
       setState(() {
         _isLoading = false;
@@ -65,7 +63,6 @@ class _GenrePageState extends State<BookSearch> {
       }
 
       books.addAll(bookList);
-      print(books.length);
 
       setState(() {
         _isLoading = false;
@@ -129,49 +126,48 @@ class _GenrePageState extends State<BookSearch> {
               label: (i, v) => v,
             ),
           ),
-          Container(
-            height: 450,
-            child: _isLoading
-                ? Container()
-                : Column(
-                    children: [
-                      Flexible(
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                          ),
-                          itemCount: books.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailPage(
-                                      bookID: books[index].id.toString(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      books[index].thumbnail ?? URL_DEFAULT,
-                                    ),
-                                  ),
+          _isLoading
+              ? Container()
+              : Column(
+                  children: [
+                    GridView.builder(
+                      physics: ScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 20,
+                      ),
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookDetail(
+                                  bookID: books[index].id.toString(),
                                 ),
-                                height: 200,
                               ),
                             );
                           },
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
+                          child: SizedBox(
+                            child: Image.network(
+                              books[index].thumbnail ?? URL_BOOK,
+                              errorBuilder: (context, exception, stackTrace) {
+                                return Image.network(
+                                  URL_BOOK,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                            height: 200,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
         ],
       ),
     );

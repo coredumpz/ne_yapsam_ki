@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:favorite_button/favorite_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,10 +9,10 @@ import 'package:html/parser.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:ne_yapsam_ki/models/game/game_genre_model.dart';
 
+import '../../components/dialogs/show_alert_dialog.dart';
+import '../../dbHelper/mongodb_user.dart';
 import '../../models/game/game_detail_model.dart';
-import '../../models/game/game_list_detail_model.dart';
 
 class GameDetailPage extends StatefulWidget {
   final int id;
@@ -25,9 +27,14 @@ class _GameDetailPageState extends State<GameDetailPage> {
   late GameDetail game;
   bool _isLoading = true;
 
+  late bool isFavorite;
+
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     super.initState();
+    isFav();
     gameCall(widget.id);
   }
 
@@ -54,6 +61,46 @@ class _GameDetailPageState extends State<GameDetailPage> {
           )
         : Scaffold(
             appBar: AppBar(
+              actions: [
+                user!.isAnonymous
+                    ? IconButton(
+                        iconSize: 35,
+                        onPressed: () {
+                          showAlertDialog(
+                            context,
+                            content: "You have to sign in first!",
+                            defaultActionText: "Sign In",
+                            onPressed: () async {
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.of(context).popAndPushNamed("/login");
+                            },
+                            cancelActionText: "Cancel",
+                            onPressedCancel: Navigator.of(context).pop,
+                          );
+                        },
+                        icon: Icon(FontAwesomeIcons.solidHeart),
+                      )
+                    : FavoriteButton(
+                        isFavorite: isFavorite,
+                        valueChanged: (_isFavorite) {
+                          setState(() {
+                            if (!_isFavorite) {
+                              deleteFav();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Deleted from your favorites."),
+                              ));
+                            } else {
+                              addFav();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Added to your favorites."),
+                              ));
+                            }
+                          });
+                        },
+                      ),
+              ],
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.navigate_before),
@@ -75,7 +122,13 @@ class _GameDetailPageState extends State<GameDetailPage> {
                           height: 250,
                           width: MediaQuery.of(context).size.width,
                           child: Image.network(
-                            game.image ?? URL_DEFAULT,
+                            game.image ?? URL_GAME,
+                            errorBuilder: (context, exception, stackTrace) {
+                              return Image.network(
+                                URL_GAME,
+                                fit: BoxFit.cover,
+                              );
+                            },
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -188,5 +241,36 @@ class _GameDetailPageState extends State<GameDetailPage> {
         parse(document.body!.text).documentElement!.text;
 
     return parsedString;
+  }
+
+  Future<void> addFav() async {
+    await MongoDBInsert.updateGame(
+      getUUID(),
+      widget.id,
+    );
+  }
+
+  Future<void> deleteFav() async {
+    await MongoDBInsert.deleteGame(
+      getUUID(),
+      widget.id,
+    );
+  }
+
+  Future<void> isFav() async {
+    await MongoDBInsert.checkGame(
+      getUUID(),
+      widget.id,
+    ).then((value) => setState(() => {
+          isFavorite = value,
+        }));
+  }
+
+  getUUID() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+    return uid;
   }
 }

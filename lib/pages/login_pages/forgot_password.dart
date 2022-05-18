@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/components/dialogs/show_alert_dialog.dart';
 
+import '../../components/custom_button.dart';
 import '../../components/snackbar.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -28,9 +28,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Reset Password"),
+        leading: IconButton(
+          icon: const Icon(Icons.navigate_before),
+          onPressed: () => Navigator.of(context).pop(),
+          iconSize: 30,
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -51,7 +56,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 controller: emailController,
                 cursorColor: Colors.white,
                 textInputAction: TextInputAction.done,
-                decoration: InputDecoration(labelText: "Email"),
+                decoration: InputDecoration(
+                  hintText: 'Enter your email',
+                  prefixIcon: const Icon(Icons.email),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (email) =>
                     email != null && !EmailValidator.validate(email)
@@ -61,19 +72,30 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  maximumSize: const Size.fromHeight(50),
+              CustomElevatedButton(
+                text: 'Reset Password',
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.black,
+                  ),
                 ),
                 onPressed: resetPassword,
-                icon: const Icon(
-                  Icons.email_outlined,
-                ),
-                label: const Text(
-                  "Reset Password",
-                  style: TextStyle(fontSize: 24),
-                ),
               ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).popAndPushNamed("/login"),
+                child: const Text(
+                  "Sign in",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  primary: Colors.black,
+                ),
+              )
             ],
           ),
         ),
@@ -93,10 +115,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
-      Utils.showSnackBar("Password Reset Email Sent");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Password reset email sent."),
+      ));
+      showAlertDialog(
+        context,
+        content: "Password Reset Email Sent",
+        defaultActionText: "Sign In",
+        onPressed: () => Navigator.of(context).popAndPushNamed("/login"),
+        cancelActionText: "Cancel",
+        onPressedCancel: Navigator.of(context).pop,
+      );
+
       //Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
-      Utils.showSnackBar(e.message);
+      //Utils.showSnackBar(e.message);
       //Navigator.of(context).pop();
     }
   }

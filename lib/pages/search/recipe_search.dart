@@ -4,15 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
-import 'package:number_paginator/number_paginator.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../dbHelper/mongodb.dart';
-import '../../models/genre_model.dart';
-import '../../models/movie/movie_model.dart';
 import '../food/recipe_detail.dart';
 import '../food/recipe_model.dart';
-import '../movies_TMDB/description.dart';
 
 class RecipeSearch extends StatefulWidget {
   const RecipeSearch({Key? key}) : super(key: key);
@@ -62,7 +57,7 @@ class _GenrePageState extends State<RecipeSearch> {
                 setState(() {
                   tag = -1;
                   searchedWord = textController.text;
-                  print(searchedWord);
+
                   mongoMethod();
                 });
               },
@@ -81,50 +76,47 @@ class _GenrePageState extends State<RecipeSearch> {
               label: (i, v) => v,
             ),
           ),
-          Container(
-            height: 450,
-            child: _isLoading
-                ? Container()
-                : Column(
-                    children: [
-                      Flexible(
-                        child: FutureBuilder(
-                          future: mongoMethod(),
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              if (snapshot.hasData) {
-                                return GridView.builder(
-                                  padding: const EdgeInsets.all(8),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing: 20,
-                                    crossAxisSpacing: 8,
-                                  ),
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (context, index) {
-                                    return listRecipe(RecipeModel.fromJson(
-                                        snapshot.data[index]));
-                                  },
-                                );
-                              } else {
-                                return const Center(
-                                  child: Text("No Data Avaliable"),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
+          _isLoading
+              ? Container()
+              : Column(
+                  children: [
+                    FutureBuilder(
+                      future: mongoMethod(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          if (snapshot.hasData) {
+                            return GridView.builder(
+                              physics: ScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(8),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 20,
+                                crossAxisSpacing: 8,
+                              ),
+                              scrollDirection: Axis.vertical,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return listRecipe(
+                                    RecipeModel.fromJson(snapshot.data[index]));
+                              },
+                            );
+                          } else {
+                            return const Center(
+                              child: Text("No Data Avaliable"),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
         ],
       ),
     );
@@ -184,16 +176,17 @@ class _GenrePageState extends State<RecipeSearch> {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      adjustImage(recipe.image.toString()),
-                    ),
-                  ),
+                child: Image.network(
+                  adjustImage(recipe.image.toString()) ?? URL_RECIPE,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, exception, stackTrace) {
+                    return Image.network(
+                      URL_RECIPE,
+                      fit: BoxFit.fill,
+                    );
+                  },
                 ),
-                height: 130,
+                height: 120,
               ),
               SizedBox(height: 5),
               Container(
@@ -202,7 +195,7 @@ class _GenrePageState extends State<RecipeSearch> {
                   style: GoogleFonts.mcLaren(
                     textStyle: const TextStyle(
                         color: Colors.red,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -261,7 +254,9 @@ class _GenrePageState extends State<RecipeSearch> {
 
     final startIndex = item.indexOf(start);
     final endIndex = item.indexOf(end, startIndex + start.length);
-
+    if (startIndex < 0 || endIndex < 0) {
+      return URL_RECIPE;
+    }
     item = start + item.substring(startIndex + start.length, endIndex) + end;
     return item;
   }

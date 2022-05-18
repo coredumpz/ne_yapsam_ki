@@ -5,8 +5,6 @@ import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/series_more.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_description.dart';
 
 import '../../constants/globals.dart';
-import '../../models/movie/movie_model.dart';
-import '../movies_TMDB/description.dart';
 
 class TvSeries extends StatelessWidget {
   final List<Series> series;
@@ -25,7 +23,10 @@ class TvSeries extends StatelessWidget {
               Text(
                 title,
                 style: GoogleFonts.mcLaren(
-                  textStyle: TextStyle(color: Colors.white, fontSize: 20),
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
                 ),
               ),
               const Spacer(),
@@ -56,8 +57,8 @@ class TvSeries extends StatelessWidget {
                   : const SizedBox(),
             ],
           ),
-          SizedBox(height: 10),
-          Container(
+          const SizedBox(height: 10),
+          SizedBox(
               height: 270,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -74,7 +75,7 @@ class TvSeries extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Container(
+                      child: SizedBox(
                         width: 140,
                         child: Column(
                           children: [
@@ -92,11 +93,11 @@ class TvSeries extends StatelessWidget {
                               height: 200,
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               child: Text(
                                 series[index].title ?? "null",
                                 style: GoogleFonts.mcLaren(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       color: Colors.white, fontSize: 14.5),
                                 ),
                               ),

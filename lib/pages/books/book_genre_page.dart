@@ -83,7 +83,7 @@ class _GenrePageState extends State<BooksGenrePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailPage(
+                          builder: (context) => BookDetail(
                             bookID: books[index].id!,
                           ),
                         ),

@@ -1,5 +1,3 @@
-import 'package:ne_yapsam_ki/models/movie/movie_model.dart';
-
 class MovieDetail {
   final int id;
   final String? title;

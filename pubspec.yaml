@@ -54,6 +54,10 @@ dependencies:
   number_paginator: ^0.0.2
   gender_picker: ^1.1.0
   date_time_picker: ^2.1.0
+  custom_radio_grouped_button: ^2.1.2
+  favorite_button: ^0.0.4
+  flutter_slidable: ^1.2.0
+  curved_navigation_bar: ^1.0.3
   
   flutter:
     sdk: flutter

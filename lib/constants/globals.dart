@@ -10,6 +10,11 @@ String TMDB_URL_BASE = 'https://image.tmdb.org/t/p/w500';
 String URL_RECIPE =
     "https://dcassetcdn.com/design_img/375573/141837/141837_3015959_375573_image.jpg";
 
+String URL_BOOK =
+    "https://banner2.cleanpng.com/20180327/tpq/kisspng-scythe-don-t-get-caught-book-computer-icons-clip-a-store-shelf-5ab9e4f04332c2.4928392715221322082753.jpg";
+String URL_GAME =
+    "https://i.pinimg.com/originals/72/3d/0a/723d0af616b1fe7d5c7e56a3532be3cd.png";
+
 List<String> bookCategory = [
   "fantasy",
   "fiction",
@@ -19,7 +24,6 @@ List<String> bookCategory = [
   "historical",
   "bibliography",
   "education",
-  "religious",
   "travel"
 ];
 
@@ -125,7 +129,6 @@ final gameGenres = [
   "action",
   "indie",
   "adventure",
-  "rpg",
   "strategy",
   "shooter",
   "casual",
@@ -134,11 +137,9 @@ final gameGenres = [
   "arcade",
   "platformer",
   "racing",
-  "massively multiplayer",
   "sports",
   "fighting",
   "family",
-  "board games",
   "educational",
   "card",
 ];

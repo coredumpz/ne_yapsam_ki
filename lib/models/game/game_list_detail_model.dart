@@ -4,6 +4,7 @@ class GameListDetail {
   String? image;
   double? rating;
   int? metacritic;
+  String? released;
 
   GameListDetail({
     this.id,
@@ -11,6 +12,7 @@ class GameListDetail {
     this.image,
     this.rating,
     this.metacritic,
+    this.released,
   });
 
   factory GameListDetail.fromApi(Map<String, dynamic> data) {
@@ -20,6 +22,7 @@ class GameListDetail {
       image: data['background_image'],
       rating: data['rating'],
       metacritic: data['metacritic'],
+      released: data['released'],
     );
   }
 }

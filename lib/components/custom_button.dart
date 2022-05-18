@@ -15,7 +15,7 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       child: Text(
         text,
-        style: const TextStyle(fontSize: 16, color: accentColorC),
+        style: const TextStyle(fontSize: 20, color: accentColorC),
       ),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(buttonColor),

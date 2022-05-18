@@ -55,7 +55,7 @@ class MoviesList extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Container(
+          SizedBox(
             height: 270,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,

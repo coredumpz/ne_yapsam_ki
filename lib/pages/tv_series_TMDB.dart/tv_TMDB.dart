@@ -1,16 +1,11 @@
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ne_yapsam_ki/pages/search/tv_search.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/series_lists.dart';
-import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_genre_page.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../models/genre_model.dart';
-import '../../models/movie/movie_model.dart';
 import '../../models/series/series_model.dart';
-import '../search/movie_search.dart';
 
 class TvTMDB extends StatefulWidget {
   TvTMDB({Key? key}) : super(key: key);

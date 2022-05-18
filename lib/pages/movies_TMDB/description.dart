@@ -1,3 +1,5 @@
+import 'package:favorite_button/favorite_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +10,9 @@ import 'package:ne_yapsam_ki/models/movie/movie_video_model.dart';
 import 'package:ne_yapsam_ki/pages/movies_TMDB/movies_list.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../components/dialogs/show_alert_dialog.dart';
+import '../../dbHelper/mongodb_user.dart';
 
 class MovieDescription extends StatefulWidget {
   final Movie movie;
@@ -31,6 +36,10 @@ class _MovieDescriptionState extends State<MovieDescription> {
   MovieVideo? movieVideo;
   bool _isVideoAvailable = false;
 
+  late bool isFavorite;
+
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   void deactivate() {
     controller?.pause();
@@ -46,6 +55,7 @@ class _MovieDescriptionState extends State<MovieDescription> {
   @override
   void initState() {
     super.initState();
+    isFav();
     loadDetails();
   }
 
@@ -66,7 +76,6 @@ class _MovieDescriptionState extends State<MovieDescription> {
         await tmdbWithCustomLogs.v3.movies.getDetails(widget.movie.id);
 
     movieDetail = MovieDetail.fromJson(movieDetails);
-    print(movieDetail.runtime);
 
     for (var i = 0; i < videoDetail["results"].length; i++) {
       if (videoDetail["results"][i]["type"] == "Trailer") {
@@ -104,6 +113,46 @@ class _MovieDescriptionState extends State<MovieDescription> {
           )
         : Scaffold(
             appBar: AppBar(
+              actions: [
+                user!.isAnonymous
+                    ? IconButton(
+                        iconSize: 35,
+                        onPressed: () {
+                          showAlertDialog(
+                            context,
+                            content: "You have to sign in first!",
+                            defaultActionText: "Sign In",
+                            onPressed: () async {
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.of(context).popAndPushNamed("/login");
+                            },
+                            cancelActionText: "Cancel",
+                            onPressedCancel: Navigator.of(context).pop,
+                          );
+                        },
+                        icon: Icon(FontAwesomeIcons.solidHeart),
+                      )
+                    : FavoriteButton(
+                        isFavorite: isFavorite,
+                        valueChanged: (_isFavorite) {
+                          setState(() {
+                            if (!_isFavorite) {
+                              deleteFav();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Deleted from your favorites."),
+                              ));
+                            } else {
+                              addFav();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Added to your favorites."),
+                              ));
+                            }
+                          });
+                        },
+                      ),
+              ],
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.navigate_before),
@@ -257,5 +306,28 @@ class _MovieDescriptionState extends State<MovieDescription> {
         )
       ],
     );
+  }
+
+  Future<void> addFav() async {
+    await MongoDBInsert.updateMovies(getUUID(), widget.movie.id);
+  }
+
+  Future<void> deleteFav() async {
+    await MongoDBInsert.deleteMovies(getUUID(), widget.movie.id);
+  }
+
+  Future<void> isFav() async {
+    await MongoDBInsert.checkMovies(getUUID(), widget.movie.id)
+        .then((value) => setState(() => {
+              isFavorite = value,
+            }));
+  }
+
+  getUUID() {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+    return uid;
   }
 }

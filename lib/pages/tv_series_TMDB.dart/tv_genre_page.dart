@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
-import 'package:ne_yapsam_ki/models/movie/movie_model.dart';
 import 'package:ne_yapsam_ki/models/series/series_model.dart';
 import 'package:ne_yapsam_ki/pages/tv_series_TMDB.dart/tv_description.dart';
 import 'package:tmdb_api/tmdb_api.dart';

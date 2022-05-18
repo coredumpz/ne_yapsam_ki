@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:math';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/dbHelper/constant.dart';
@@ -112,4 +111,7 @@ class MongoDatabase {
         .find(where.eq("RecipeCategory", recipeCategories[random]).limit(100))
         .toList();
   }
+
+  static Future<List<Map<String, dynamic>>> getRecipe(String name) async =>
+      await userCollection.find(where.eq("Name", name)).toList();
 }

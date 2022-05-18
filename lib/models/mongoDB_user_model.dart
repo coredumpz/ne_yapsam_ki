@@ -19,6 +19,11 @@ class MongoDBUserModel {
     required this.age,
     required this.gender,
     required this.horoscope,
+    required this.movieFav,
+    required this.seriesFav,
+    required this.bookFav,
+    required this.recipeFav,
+    required this.gameFav,
   });
 
   ObjectId id;
@@ -26,6 +31,11 @@ class MongoDBUserModel {
   int age;
   String gender;
   String horoscope;
+  List movieFav;
+  List seriesFav;
+  List bookFav;
+  List recipeFav;
+  List gameFav;
 
   factory MongoDBUserModel.fromJson(Map<String, dynamic> json) =>
       MongoDBUserModel(
@@ -34,6 +44,11 @@ class MongoDBUserModel {
         age: json["age"],
         gender: json["gender"],
         horoscope: json["horoscope"],
+        movieFav: json["movieFav"],
+        seriesFav: json["seriesFav"],
+        bookFav: json["bookFav"],
+        recipeFav: json["recipeFav"],
+        gameFav: json["gameFav"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -42,5 +57,10 @@ class MongoDBUserModel {
         "age": age,
         "gender": gender,
         "horoscope": horoscope,
+        "movieFav": movieFav,
+        "seriesFav": seriesFav,
+        "bookFav": bookFav,
+        "recipeFav": recipeFav,
+        "gameFav": gameFav,
       };
 }

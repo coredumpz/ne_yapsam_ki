@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/pages/movies_TMDB/description.dart';
-import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../models/movie/movie_model.dart';
-import '../../models/series/series_model.dart';
 
 class MovieResult extends StatefulWidget {
   const MovieResult({Key? key}) : super(key: key);
@@ -30,14 +27,6 @@ class _MovieResultState extends State<MovieResult> {
   int randomMoviePage = 0;
   late Movie randomMovie;
 
-  List<String> imgList = [
-    "movie",
-    "tvseries",
-    "book",
-    "game",
-    "food",
-  ];
-
   final _random = Random();
 
   @override
@@ -57,7 +46,7 @@ class _MovieResultState extends State<MovieResult> {
     );
 
     randomPage = _random.nextInt(20) + 1;
-    randomMoviePage = _random.nextInt(9) + 1;
+    randomMoviePage = _random.nextInt(19) + 1;
 
     Map topratedresult =
         await tmdbWithCustomLogs.v3.movies.getTopRated(page: randomPage);
@@ -74,6 +63,18 @@ class _MovieResultState extends State<MovieResult> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            color: Colors.black,
+            alignment: Alignment.topRight,
+            iconSize: 40.0,
+            onPressed: () => setState(() {
+              _isLoading = true;
+              loadContent();
+            }),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.navigate_before),
@@ -81,96 +82,69 @@ class _MovieResultState extends State<MovieResult> {
           iconSize: 30,
           color: Colors.black,
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white70,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.green, Colors.blue.withOpacity(0.2)],
+            colors: [Colors.white70, Colors.grey.withOpacity(0.2)],
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                "assets/images/${imgList[getResultIndex()]}.png",
-                scale: 4,
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Text(
-                    "YOUR ${imgList[getResultIndex()].toUpperCase()} IS :",
-                    style: GoogleFonts.mcLaren(
-                      textStyle: const TextStyle(
-                          color: Color.fromARGB(255, 13, 135, 17),
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            buildResult(context),
-          ],
-        ),
+        child: movieCard(),
       ),
     );
   }
 
-  getResultIndex() {
-    return Provider.of<WheelProvider>(context).wheelIndex;
-  }
-
-  buildResult(BuildContext context) {
+  movieCard() {
     return _isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20),
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network(
-                    randomMovie.posterPath != null
-                        ? TMDB_URL_BASE + randomMovie.posterPath!
-                        : URL_DEFAULT,
-                    fit: BoxFit.fitHeight,
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDescription(
+                    movie: randomMovie,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(top: 20, right: 30, left: 30),
-                  child: TextButton(
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                            randomMovie.posterPath != null
+                                ? TMDB_URL_BASE + randomMovie.posterPath!
+                                : URL_DEFAULT,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 70,
+                    alignment: Alignment.center,
                     child: Text(
                       randomMovie.title.toString(),
                       style: GoogleFonts.mcLaren(
                         textStyle: const TextStyle(
-                            color: Color.fromARGB(255, 13, 135, 17),
+                            color: Colors.black,
                             fontSize: 22,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MovieDescription(
-                            movie: randomMovie,
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
   }

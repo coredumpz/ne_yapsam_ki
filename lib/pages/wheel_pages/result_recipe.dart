@@ -5,14 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_detail.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_model.dart';
-import 'package:ne_yapsam_ki/pages/movies_TMDB/description.dart';
-import 'package:ne_yapsam_ki/utils/wheel_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../dbHelper/mongodb.dart';
-import '../../models/movie/movie_model.dart';
-import '../../models/series/series_model.dart';
 
 class RecipeResult extends StatefulWidget {
   const RecipeResult({Key? key}) : super(key: key);
@@ -22,29 +16,25 @@ class RecipeResult extends StatefulWidget {
 }
 
 class _RecipeResultState extends State<RecipeResult> {
-  final String apikey = '11c5704a37b7b08b3083df59a703204e';
-  final String readaccesstoken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxMWM1NzA0YTM3YjdiMDhiMzA4M2RmNTlhNzAzMjA0ZSIsInN1YiI6IjYyMjRhM2M3NjgwYmU4MDA2ZGNhYTQ2NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.J782z7K-CcVx6sVjev285CnNL9caoKLiU5-doChf6Ik.C_Bkz_T8OybTGo3HfYsESNjN46LBYdw3LHdF-1TzYYs';
-
   late RecipeModel recipe;
   int randomCategory = 0;
   int randomNum = 0;
-  late Movie randomMovie;
-
-  List<String> imgList = [
-    "movie",
-    "tvseries",
-    "book",
-    "game",
-    "food",
-  ];
-
-  final _random = Random();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            color: Colors.black,
+            alignment: Alignment.topRight,
+            iconSize: 40.0,
+            onPressed: () => setState(() {
+              buildResult(context);
+            }),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.navigate_before),
@@ -52,56 +42,25 @@ class _RecipeResultState extends State<RecipeResult> {
           iconSize: 30,
           color: Colors.black,
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white70,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.green, Colors.blue.withOpacity(0.2)],
+            colors: [Colors.white70, Colors.grey.withOpacity(0.2)],
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                "assets/images/${imgList[getResultIndex()]}.png",
-                scale: 4,
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Text(
-                    "YOUR ${imgList[getResultIndex()].toUpperCase()} IS :",
-                    style: GoogleFonts.mcLaren(
-                      textStyle: const TextStyle(
-                          color: Color.fromARGB(255, 13, 135, 17),
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            buildResult(context),
-          ],
-        ),
+        child: buildResult(context),
       ),
     );
-  }
-
-  getResultIndex() {
-    return Provider.of<WheelProvider>(context).wheelIndex;
   }
 
   buildResult(BuildContext context) {
     final _random = Random();
     int randomCategory = _random.nextInt(16);
-    int randomNum = _random.nextInt(25);
+    int randomNum = _random.nextInt(99);
 
     return FutureBuilder(
       future: MongoDatabase.getRandom(randomCategory),
@@ -112,48 +71,13 @@ class _RecipeResultState extends State<RecipeResult> {
           );
         } else {
           if (snapshot.hasData) {
+            if (randomNum > snapshot.data.length || randomNum == 0) {
+              return buildResult(context);
+            }
+
             recipe = RecipeModel.fromJson(snapshot.data[randomNum]);
 
-            return SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 20),
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(
-                      adjustImage(recipe.image.toString()),
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.only(top: 20, right: 30, left: 30),
-                    child: TextButton(
-                      child: Text(
-                        recipe.name.toString(),
-                        style: GoogleFonts.mcLaren(
-                          textStyle: const TextStyle(
-                              color: Color.fromARGB(255, 13, 135, 17),
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecipeDetail(
-                              recipe: recipe,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return recipeCard();
           } else {
             return const Center(
               child: Text("No Data Avaliable"),
@@ -164,6 +88,59 @@ class _RecipeResultState extends State<RecipeResult> {
     );
   }
 
+  recipeCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetail(
+              recipe: recipe,
+            ),
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: Image.network(
+                      adjustImage(recipe.image.toString()) ?? URL_RECIPE,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, exception, stackTrace) {
+                        return Image.network(
+                          URL_RECIPE,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ).image,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text(
+                adjustName(recipe.name),
+                style: GoogleFonts.mcLaren(
+                  textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   adjustImage(String item) {
     const start = "https";
     const end = "jpg";
@@ -171,7 +148,19 @@ class _RecipeResultState extends State<RecipeResult> {
     final startIndex = item.indexOf(start);
     final endIndex = item.indexOf(end, startIndex + start.length);
 
+    if (startIndex <= 0 || endIndex <= 0) {
+      return URL_RECIPE;
+    }
+
     item = start + item.substring(startIndex + start.length, endIndex) + end;
     return item;
+  }
+
+  adjustName(String name) {
+    if (name.length > 25) {
+      return name.substring(0, 22) + "...";
+    } else {
+      return name;
+    }
   }
 }

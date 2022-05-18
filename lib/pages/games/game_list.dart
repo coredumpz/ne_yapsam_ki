@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:http/http.dart' as http;
 import 'package:ne_yapsam_ki/pages/games/game_detail.dart';
+import 'package:ne_yapsam_ki/pages/games/games_more.dart';
 
 import '../../models/game/game_list_detail_model.dart';
 
@@ -42,10 +43,11 @@ class _GameListState extends State<GameList> {
     }
 
     gameList.addAll(list);
-
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -71,12 +73,14 @@ class _GameListState extends State<GameList> {
                       alignment: Alignment.center,
                       child: TextButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) =>
-                            //           BookstitlePage(titleName: widget.title)),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MoreGames(
+                                        platformID: widget.id,
+                                        platformName: widget.title,
+                                      )),
+                            );
                           },
                           child: Text(
                             "See More..",
@@ -109,17 +113,21 @@ class _GameListState extends State<GameList> {
                           );
                         },
                         child: Container(
+                          padding: const EdgeInsets.all(5),
                           width: 140,
                           child: Column(
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      gameList[index].image ?? URL_DEFAULT,
-                                    ),
-                                  ),
+                                child: Image.network(
+                                  gameList[index].image ?? URL_GAME,
+                                  fit: BoxFit.cover,
+                                  errorBuilder:
+                                      (context, exception, stackTrace) {
+                                    return Image.network(
+                                      URL_GAME,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
                                 ),
                                 height: 200,
                               ),

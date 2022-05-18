@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:ne_yapsam_ki/pages/home_page.dart';
 
 import '../../components/snackbar.dart';
+import '../../dbHelper/mongodb.dart';
+import '../../dbHelper/mongodb_user.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   VerifyEmailPage({Key? key}) : super(key: key);
@@ -64,7 +66,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       await Future.delayed(const Duration(seconds: 5));
       setState((() => canResendEmail = true));
     } catch (e) {
-      Utils.showSnackBar(e.toString());
+      // Utils.showSnackBar(e.toString());
     }
   }
 

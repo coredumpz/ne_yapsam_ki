@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yapsam_ki/auth/auth.dart';
 import 'package:ne_yapsam_ki/components/custom_button.dart';
 
 class LandingPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _LandingPageState extends State<LandingPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Image.asset(
-            "assets/images/aa.png",
+            "assets/images/love.png",
             width: 250,
             height: 250,
             scale: 1,
@@ -53,16 +54,26 @@ class _LandingPageState extends State<LandingPage> {
             },
           ),
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(
-                "/homepage",
-              );
+            onPressed: () async {
+              bool isAnon = await AuthService.signInAnon();
+              if (isAnon) {
+                Navigator.of(context).pushNamed(
+                  "/homepage",
+                );
+              }
             },
             child: const Text(
-              "Continue without login",
-              style: TextStyle(color: Colors.black),
+              "Continue without Sign in",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+            style: TextButton.styleFrom(
+              primary: Colors.black,
+            ),
+          )
         ],
       ),
     );

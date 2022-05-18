@@ -40,9 +40,10 @@ class _BooksListState extends State<BooksList> {
 
       books.addAll(bookList);
 
-      setState(() {
-        _isLoading = false;
-      });
+      // Before calling setState check if the state is mounted.
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
       print("error get books $e");
     }
@@ -53,7 +54,7 @@ class _BooksListState extends State<BooksList> {
     return _isLoading
         ? Container()
         : Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -90,8 +91,8 @@ class _BooksListState extends State<BooksList> {
                     )
                   ],
                 ),
-                SizedBox(height: 10),
-                Container(
+                const SizedBox(height: 10),
+                SizedBox(
                   height: 270,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -103,14 +104,14 @@ class _BooksListState extends State<BooksList> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DetailPage(
+                                builder: (context) => BookDetail(
                                   bookID: books[index].id!,
                                 ),
                               ),
                             );
                           }
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 140,
                           child: Column(
                             children: [
@@ -124,13 +125,14 @@ class _BooksListState extends State<BooksList> {
                                 ),
                                 height: 200,
                               ),
-                              SizedBox(height: 5),
-                              Container(
+                              const SizedBox(height: 5),
+                              SizedBox(
                                 child: Text(
-                                  books[index].title ?? 'NA',
+                                  adjustTitle(books[index].title.toString()) ??
+                                      'NA',
                                   style: GoogleFonts.mcLaren(
                                     textStyle: const TextStyle(
-                                        color: Colors.white, fontSize: 13),
+                                        color: Colors.white, fontSize: 14),
                                   ),
                                 ),
                               )
@@ -144,5 +146,13 @@ class _BooksListState extends State<BooksList> {
               ],
             ),
           );
+  }
+
+  adjustTitle(String title) {
+    if (title.length > 20) {
+      return title.substring(0, 20);
+    } else {
+      return title;
+    }
   }
 }

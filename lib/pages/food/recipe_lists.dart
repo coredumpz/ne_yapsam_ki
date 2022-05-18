@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/constants/globals.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_detail.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_model.dart';
-import 'package:http/http.dart' as http;
 
 import '../../dbHelper/mongodb.dart';
 
@@ -24,7 +21,7 @@ class _RecipeListState extends State<RecipeList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -40,41 +37,39 @@ class _RecipeListState extends State<RecipeList> {
           const SizedBox(
             height: 10,
           ),
-          FutureBuilder(
-            future: mongoMethod(),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                if (snapshot.hasData) {
-                  print(
-                      widget.mealType + "= " + snapshot.data.length.toString());
-                  return SizedBox(
-                    height: 270,
-                    child: ListView.builder(
+          SizedBox(
+            height: 270,
+            child: FutureBuilder(
+              future: mongoMethod(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: 20,
                         itemBuilder: (context, index) {
-                          return listRecipe(
+                          return listRecipe(context,
                               RecipeModel.fromJson(snapshot.data[index]));
-                        }),
-                  );
-                } else {
-                  return const Center(
-                    child: Text("No Data Avaliable"),
-                  );
+                        });
+                  } else {
+                    return const Center(
+                      child: Text("No Data Avaliable"),
+                    );
+                  }
                 }
-              }
-            },
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  listRecipe(RecipeModel recipe) {
+  listRecipe(BuildContext context, RecipeModel recipe) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -89,16 +84,18 @@ class _RecipeListState extends State<RecipeList> {
         width: 140,
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    adjustImage(recipe.image.toString()) ?? URL_RECIPE,
-                  ),
-                ),
+            SizedBox(
+              child: Image.network(
+                adjustImage(recipe.image.toString()) ?? URL_RECIPE,
+                fit: BoxFit.cover,
+                errorBuilder: (context, exception, stackTrace) {
+                  return Image.network(
+                    URL_RECIPE,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
-              height: 180,
+              height: 200,
             ),
             SizedBox(height: 5),
             Container(
@@ -137,7 +134,9 @@ class _RecipeListState extends State<RecipeList> {
 
     final startIndex = item.indexOf(start);
     final endIndex = item.indexOf(end, startIndex + start.length);
-
+    if (startIndex < 0 || endIndex < 0) {
+      return URL_RECIPE;
+    }
     item = start + item.substring(startIndex + start.length, endIndex) + end;
     return item;
   }

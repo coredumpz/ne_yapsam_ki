@@ -55,6 +55,7 @@ class _GenrePageState extends State<SearchPage> {
 
     setState(() {
       genreList = Genre.genresFromSnapshot(genreresults["genres"]);
+      print(genreList[0].id);
     });
   }
 
@@ -73,7 +74,7 @@ class _GenrePageState extends State<SearchPage> {
     );
 
     setState(() {
-      movies = [];
+      movies.clear();
       movies = Movie.moviesFromSnapshot(movielistresult["results"]);
       _isLoading = false;
     });
@@ -94,7 +95,7 @@ class _GenrePageState extends State<SearchPage> {
     );
 
     setState(() {
-      movies = [];
+      movies.clear();
       movies = Movie.moviesFromSnapshot(movieResult["results"]);
       _isLoading = false;
     });
@@ -148,6 +149,7 @@ class _GenrePageState extends State<SearchPage> {
               choice = 1;
               page = 1;
               tag = val;
+              _isLoading = true;
               loadGenreList(genreList[tag].id);
             }),
             choiceItems: C2Choice.listFrom<int, String>(
@@ -156,70 +158,67 @@ class _GenrePageState extends State<SearchPage> {
               label: (i, v) => v,
             ),
           ),
-          Container(
-            height: 450,
-            child: _isLoading
-                ? Container()
-                : Column(
-                    children: [
-                      Flexible(
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                          ),
-                          itemCount: movies.length,
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MovieDescription(
-                                      movie: movies[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      movies[index].posterPath != null
-                                          ? TMDB_URL_BASE +
-                                              movies[index].posterPath!
-                                          : URL_DEFAULT,
-                                    ),
-                                  ),
+          _isLoading
+              ? Container()
+              : Column(
+                  children: [
+                    GridView.builder(
+                      physics: ScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 20,
+                      ),
+                      itemCount: movies.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MovieDescription(
+                                  movie: movies[index],
                                 ),
-                                height: 200,
                               ),
                             );
                           },
-                        ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  movies[index].posterPath != null
+                                      ? TMDB_URL_BASE +
+                                          movies[index].posterPath!
+                                      : URL_DEFAULT,
+                                ),
+                              ),
+                            ),
+                            height: 200,
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 50,
+                      child: NumberPaginator(
+                        numberPages: 10,
+                        onPageChange: (int index) {
+                          setState(() {
+                            page = index + 1;
+                            choice == 1
+                                ? loadGenreList(genreList[tag].id)
+                                : searchMovie(searchedMovieName);
+                          });
+                        },
+                        initialPage: 0,
+                        height: 55,
+                        buttonUnselectedForegroundColor: Colors.black,
+                        buttonSelectedBackgroundColor: Colors.red,
                       ),
-                      SizedBox(
-                        height: 50,
-                        child: NumberPaginator(
-                          numberPages: 10,
-                          onPageChange: (int index) {
-                            setState(() {
-                              page = index + 1;
-                              choice == 1
-                                  ? loadGenreList(genreList[tag].id)
-                                  : searchMovie(searchedMovieName);
-                            });
-                          },
-                          initialPage: 0,
-                          height: 55,
-                          buttonUnselectedForegroundColor: Colors.black,
-                          buttonSelectedBackgroundColor: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
+                    ),
+                  ],
+                ),
         ],
       ),
     );

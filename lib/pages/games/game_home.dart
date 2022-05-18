@@ -48,17 +48,16 @@ class _HomeGameState extends State<HomeGame> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          Container(
-            height: 500,
-            child: ListView.builder(
-                itemCount: gamePlatformIDS.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GameList(
-                    id: gamePlatformIDS[index],
-                    title: gamePlatformNames[index],
-                  );
-                }),
-          )
+          ListView.builder(
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: gamePlatformIDS.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GameList(
+                  id: gamePlatformIDS[index],
+                  title: gamePlatformNames[index],
+                );
+              })
         ],
       ),
     );

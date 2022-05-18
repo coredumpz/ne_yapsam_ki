@@ -49,14 +49,14 @@ class _SurveyPageState extends State<SurveyPage> {
         ),
         Flexible(
           child: ListView.builder(
-            itemCount: listSelect().length,
+            itemCount: mainList.length,
             itemBuilder: (context, index) {
               return Card(
                 child: ListTile(
                   selected: selectedIndex == index ? true : false,
                   selectedTileColor: Colors.blue[100],
                   title: Text(
-                    listSelect()[index],
+                    mainList[index],
                     style: GoogleFonts.mcLaren(
                       textStyle:
                           const TextStyle(color: Colors.black, fontSize: 20),
@@ -76,9 +76,7 @@ class _SurveyPageState extends State<SurveyPage> {
           padding: const EdgeInsets.all(8.0),
           child: TextButton(
             onPressed: () {
-              setState(() {
-                listIndex++;
-              });
+              categorieSelect();
             },
             child: Text(
               "Next",
@@ -92,12 +90,28 @@ class _SurveyPageState extends State<SurveyPage> {
     );
   }
 
-  listSelect() {
-    switch (listIndex) {
+  categorieSelect() {
+    switch (selectedIndex) {
       case 0:
-        return mainList;
+        return Navigator.of(context).pushNamed(
+          "/surveyMovie",
+        );
       case 1:
-        return movieQ1;
+        return Navigator.of(context).pushNamed(
+          "/surveyTV",
+        );
+      case 2:
+        return Navigator.of(context).pushNamed(
+          "/surveyBook",
+        );
+      case 3:
+        return Navigator.of(context).pushNamed(
+          "/surveyRecipe",
+        );
+      case 4:
+        return Navigator.of(context).pushNamed(
+          "/surveyGame",
+        );
       default:
     }
   }

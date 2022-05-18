@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_detail.dart';
 import 'package:ne_yapsam_ki/pages/food/recipe_model.dart';
 
-import '../../constants/globals.dart';
 import '../../dbHelper/mongodb.dart';
 
 class RecipeCategory extends StatefulWidget {
