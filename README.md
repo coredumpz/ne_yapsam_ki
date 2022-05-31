@@ -15,13 +15,13 @@
 
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
 * Sign In and the Main Layout of the application
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
 * Luck Wheel
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/3.gif)
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/3.gif)
 * Filtering System
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/4.gif)
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/4.gif)
 * Search
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/5.gif)
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/5.gif)
 * Favorites
 
 
