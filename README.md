@@ -6,7 +6,7 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-![Game Process](https://github.com/coredumpz/ne-yapsam-ki/blob/main/Gifs/1.gif)
+![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
 
 A few resources to get you started if this is your first Flutter project:
 
