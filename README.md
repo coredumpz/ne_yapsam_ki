@@ -13,7 +13,7 @@
 
 ## APPLICATION FEATURES
 
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
 * Sign In and the Main Layout of the application
 ![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
 * Luck Wheel
