@@ -12,17 +12,13 @@
 * Several APIs are used for data accessing and manipulations. APIs used: TMDB API, RAWG API, Google Books API.
 
 ## APPLICATION FEATURES
-
-![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif | width="100")
-* Sign In and the Main Layout of the application
+* Sign In and the Main Layout of the application - Luck Wheel - Filtering System - Search - Favorites
+![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
-* Luck Wheel
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/3.gif)
-* Filtering System
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/4.gif)
-* Search
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/5.gif)
-* Favorites
+
 
 
 
