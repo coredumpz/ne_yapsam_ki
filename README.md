@@ -1,18 +1,28 @@
 # ne_yapsam_ki
+## OUTLINE
 
-A new Flutter project.
+* This application gives users suggestions about five major topics which are movies, tv series, recipes, books and games.
+* There are filtering systems for each of the categories.
+* Users can use "luck wheel" to get a random suggestions.
+* Also, there is a registerating system in the application.
+* Users can add to his/her favorites to see the activity later on.
+* There are specialized searching sections for each of the categories.
+* This application is developed with Flutter-Firebase-MongoDB.
+* For authentication purposes Firebase is used and data information about users are kept in MongoDB with the Firebase-MongoDB connection.
+* Several APIs are used for data accessing and manipulations. APIs used: TMDB API, RAWG API, Google Books API.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
+## APPLICATION FEATURES
 
 ![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
+* Sign In and the Main Layout of the application
+![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
+* Luck Wheel
+![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/3.gif)
+* Filtering System
+![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/4.gif)
+* Search
+![](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/5.gif)
+* Favorites
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
