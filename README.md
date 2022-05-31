@@ -13,6 +13,7 @@
 
 ## APPLICATION FEATURES
 * Sign In and the Main Layout of the application - Luck Wheel - Filtering System - Search - Favorites
+
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/1.gif)
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/2.gif)
 ![Game Process](https://github.com/coredumpz/ne_yapsam_ki/blob/main/Gifs/3.gif)
